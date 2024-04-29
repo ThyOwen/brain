@@ -16,11 +16,6 @@ struct ContentView: View {
     @State private var size : CGFloat = 100
     
     @Namespace private var pannelAnimation
-    
-    private var energy : Float {
-        get { self.whisper.bufferEnergy.last ?? 0.0 }
-    }
-    
 
     var karenVisualizer : some View {
         TVView(rimColor: .mainAccent, shadow: 10)
@@ -107,14 +102,13 @@ struct ContentView: View {
                 
                 HStack(alignment: isPanel ? .bottom : .center, spacing: isPanel ? 25 : 5) {
                     Spacer()
-                    VStack(spacing: isPanel ? 15 : 8) {
-                        MicrophoneIndicatorView(loudness: self.whisper.fftLoudness,
-                                                energyLevel: self.energy,
-                                                threshold: self.whisper.appSettings.silenceThreshold, 
+                    VStack(spacing: isPanel ? 10 : 8) {
+                        MicrophoneIndicatorView(energyLevel: self.whisper.lastBufferEnergy,
+                                                threshold: self.whisper.appSettings.silenceThreshold,
                                                 isActive: self.whisper.isTranscribing)
                             .matchedGeometryEffect(id: "indicator", in: pannelAnimation)
                         
-                        MicrophoneDialView(sensitivity: self.whisper.appSettings.$silenceThreshold)
+                        MicrophoneDialView(whisper: self.$whisper)
                             .matchedGeometryEffect(id: "dial", in: pannelAnimation)
                         
                     }.fixedSize(horizontal: false, vertical: true)

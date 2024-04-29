@@ -13,13 +13,13 @@ extension Whisper {
         var val : Float = 0
         vDSP_measqv(data, 1, &val, frameLength)
 
-        var db = 10*log10f(val)
+        var db = log10f(val)
         //inverse dB to +ve range where 0(silent) -> 160(loudest)
         db = 160 + db;
         //Only take into account range from 120->160, so FSR = 40
-        db = db - 100
+        db = db - 40
 
-        let dividor = Float(60/0.3)
+        let dividor = Float(120/0.3)
         let adjustedVal = 0.3 + db/dividor
         
         return adjustedVal

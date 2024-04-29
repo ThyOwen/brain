@@ -7,53 +7,35 @@
 
 import SwiftUI
 
+public struct Arc: InsettableShape {
+    var startAngle: Angle
+    var endAngle: Angle
+    var clockwise: Bool
+    
+    var insetAmount = 0.0
+    
+    var animatableData: AnimatablePair<Double, Double> {
+        get {
+            AnimatablePair(self.startAngle, self.endAngle)
+        }
 
-fileprivate struct BarColor : Identifiable {
-    var color : Color
-    let id = UUID()
-}
+        set {
+            self.startAngle = Int(newValue.first)
+            self.endAngle = Int(newValue.second)
+        }
+    }
 
-struct MicrophoneIndicatorView : View {
-    
-    public var loudness : Float
-    public var energyLevel : Float
-    public var threshold : Double
-    public var isActive : Bool
-    public let maxNumBars : Int = 12
-    
-    private var barColor : Color { self.energyLevel > Float(self.threshold) ? Color.green : Color.red }
-    private var volumeLevel : Float { self.energyLevel * Float(self.maxNumBars) }
-    private var ceilVolumeLevel : Int { Int(ceil(self.volumeLevel)) }
-    private var floorVolumeLevel : Int { Int(floor(self.volumeLevel)) }
-    private var colors : [BarColor] { (0..<self.maxNumBars).map { BarColor(color: self.getBarColor($0)) } }
-    
-    var body: some View {
-        ZStack {
-            Capsule().fill(.mainAccent)
-                .innerShadow(Capsule(),
-                             darkShadow: .darkShadow,
-                             lightShadow: .lightShadow,
-                             spread: 0.3,
-                             radius: 5)
-            Capsule().inset(by: 3).fill(.mainAccent)
-            HStack(spacing: 1) {
-                ForEach(self.colors, id: \.id) { bar in
-                    Rectangle()
-                        .fill(bar.color)
-                }
-            }
-            .mask {
-                Capsule().inset(by: 3)
-            }
-        }.frame(minHeight: 25, maxHeight: 30)
+    public func path(in rect: CGRect) -> Path {
+        var path = Path()
+        path.addArc(center: CGPoint(x: rect.midX, y: rect.midY), radius: (rect.width / 2) - self.insetAmount, startAngle: startAngle, endAngle: endAngle, clockwise: clockwise)
+
+        return path
     }
     
-    private func getBarColor(_ idx : Int) -> Color {
-        if idx >= self.ceilVolumeLevel || !self.isActive  { return Color.gray.opacity(0.1) }
-        else if idx < self.floorVolumeLevel { return barColor.opacity(1.0) }
-        else {
-            let barOpacity : Float = ceil((self.volumeLevel - Float(self.floorVolumeLevel)) * 10)/10
-            return barColor.opacity(Double(barOpacity)) }
+    public func inset(by amount: CGFloat) -> some InsettableShape {
+        var tv = self
+        tv.insetAmount += amount
+        return tv
     }
 }
 
@@ -87,27 +69,45 @@ public enum MicrophoneDialGestureState {
 
 struct MicrophoneDialView: View {
     
-    @Binding var sensitivity : Double
+    @Binding var whisper : Whisper
+    
+    private let radiusOffsetVolNotches : CGFloat = 15
+    private let angleVolNotches : [Angle]
+    private let numVolNotches : Int
+    private let completionAngleWindow : Angle
+    private let completionAnglesBounds : (Angle, Angle)
     
     @State private var tempSensitivity : Double
-    
     @GestureState var gestureState : MicrophoneDialGestureState = .inactive
+    @State private var messageTimeOut : Double
     
     private var dialAngle : Angle {
         self.gestureState.isActive ? Angle(degrees: self.tempSensitivity * 180) + self.gestureState.angle : Angle(degrees: self.tempSensitivity * 180)
     }
     
-    let numVolNotches : Int = 8
-    let radiusOffsetVolNotches : CGFloat = 15
-    
-    var radiusVolNotches : [Angle] { (0...self.numVolNotches).map { idx in
-            .radians((Double(idx) / Double(self.numVolNotches)) * .pi)
-        }
+    private var completionAngle : Double {
+        self.messageTimeOut * (self.completionAngleWindow.degrees / 2)
     }
     
-    init(sensitivity : Binding<Double>) {
-        self._sensitivity = sensitivity
-        self.tempSensitivity = sensitivity.wrappedValue
+    private var bufferMeetsSilenceThreshold : Bool {
+        self.whisper.lastBufferEnergy > Float(self.whisper.appSettings.silenceThreshold)
+    }
+
+    init(whisper : Binding<Whisper>, completionAngleWindow : Angle = .degrees(270), numVolNotches : Int = 8) {
+        
+        self._whisper = whisper
+        self.tempSensitivity = whisper.appSettings.silenceThreshold.wrappedValue
+        self.messageTimeOut = Double(whisper.countdownValue.wrappedValue)
+        
+        self.numVolNotches = numVolNotches
+        self.angleVolNotches = (0...numVolNotches).map { idx in
+                .degrees((Double(idx) / Double(numVolNotches)) * 180)
+        }
+        
+        self.completionAngleWindow = completionAngleWindow
+        
+        let completionAngleDelta = completionAngleWindow.degrees / 2
+        self.completionAnglesBounds = (Angle(degrees: 90 + completionAngleDelta), Angle(degrees: 90 - completionAngleDelta))
     }
     
     var volumeGesture : some Gesture {
@@ -120,20 +120,54 @@ struct MicrophoneDialView: View {
                 
                 self.tempSensitivity = sensitivityCandiate
                 if sensitivityCandiate < 0.0 {
-                    withAnimation(.interactiveSpring) {
-                        self.tempSensitivity = 0.0
-                    }                    
+                    self.tempSensitivity = 0.0
                 } else if sensitivityCandiate > 1.0 {
-                    withAnimation(.interactiveSpring) {
-                        self.tempSensitivity = 1.0
-                    }
-                    
+                    self.tempSensitivity = 1.0
                 }
             }
     }
     
+    var completionIndicator : some View {
+        ZStack {
+            Arc(startAngle: self.completionAnglesBounds.0, 
+                endAngle: self.completionAnglesBounds.1,
+                clockwise: true)
+                .inset(by: -12)
+                .stroke(.mainAccent, style: StrokeStyle(lineWidth: 2.0, lineCap: .round))
+                .outerShadow(darkShadow: .darkShadow,
+                             lightShadow: .lightShadow, offset: 0.5, radius: 0.5)
+            
+            Arc(startAngle: Angle.degrees(90 + self.completionAngle), 
+                endAngle: Angle.degrees(90 - self.completionAngle),
+                clockwise: true)
+                .inset(by: -12)
+                .stroke(LinearGradient(colors: [.orange.opacity(0.6), .red.opacity(0.6)],
+                                       startPoint: .init(x: 0.5, y: 0),
+                                       endPoint: .init(x: 0.5, y: CGFloat(self.messageTimeOut))),
+                        style: StrokeStyle(lineWidth: 2.0, lineCap: .round))
+
+        }
+        .onChange(of: self.bufferMeetsSilenceThreshold) { oldValue, newValue in
+            if !newValue {
+                self.whisper.startCountdown()
+            } else {
+                self.whisper.resetCountdown()
+            }
+        }
+        .onChange(of: self.whisper.countdownValue) { oldValue, newValue in
+            withAnimation(.easeInOut(duration: 5.0)) {
+                self.messageTimeOut = Double(self.whisper.countdownValue) / Double(self.whisper.countdownLimit)
+            }
+            print(self.messageTimeOut)
+        }
+        .animation(.easeInOut, value: self.messageTimeOut)
+    }
+    
     var body: some View {
         ZStack {
+            
+            self.completionIndicator
+            
             Circle()
                 .fill(.mainAccent)
                 .outerShadow(darkShadow: .darkShadow,
@@ -142,7 +176,7 @@ struct MicrophoneDialView: View {
                              radius: 5)
             
             ZStack {
-                ForEach(self.radiusVolNotches, id: \.self) { theta in
+                ForEach(self.angleVolNotches, id: \.self) { theta in
                     HStack(spacing: 0) {
                         Capsule()
                             .fill(.gray.opacity(0.2))
@@ -161,6 +195,7 @@ struct MicrophoneDialView: View {
                              lightShadow: .lightShadow,
                              spread: 0.5,
                              radius:  10)
+
             HStack {
                 Circle()
                     .fill(LinearGradient(colors: [.red, .orange],
@@ -179,17 +214,18 @@ struct MicrophoneDialView: View {
             .rotationEffect(self.dialAngle)
              
         }
+        .fixedSize(horizontal: false, vertical: true)
         .gesture(self.volumeGesture)
-        .animation(.interactiveSpring, value: self.sensitivity)
+        .animation(.interactiveSpring, value: self.whisper.appSettings.silenceThreshold)
         .onChange(of: self.dialAngle) { oldValue, newValue in
             let sensitivityCandiate = newValue.degrees / 180
             
             if sensitivityCandiate >= 1.0 {
-                self.sensitivity = 1.0
+                self.whisper.appSettings.silenceThreshold = 1.0
             } else if sensitivityCandiate < 0.0 {
-                self.sensitivity = 0.0
+                self.whisper.appSettings.silenceThreshold = 0.0
             } else {
-                self.sensitivity = sensitivityCandiate
+                self.whisper.appSettings.silenceThreshold = sensitivityCandiate
             }
         }
         .frame(maxWidth: 150)
@@ -198,20 +234,56 @@ struct MicrophoneDialView: View {
 
 fileprivate struct TestView : View {
     
+    @State var whisper : Whisper = Whisper()
     @State var sensitivity : Double = 0.0
+    @State var messageCompleting : Bool = false
     
     var body: some View {
-        MicrophoneDialView(sensitivity: self.$sensitivity)
+        VStack {
+            Button("Toggle") {
+                withAnimation {
+                    self.messageCompleting.toggle()
+                }
+            }
+            CountdownView(shouldStartCountdown: self.$messageCompleting)
+            MicrophoneDialView(whisper: self.$whisper)
+        }
     }
 }
 
+struct CountdownView: View {
+    @Binding var shouldStartCountdown: Bool
+    @State private var countdownValue: Int = 10  // Initial countdown value
+    @State private var timer: Timer?
+    
+    var body: some View {
+        VStack {
+            Text("Countdown: \(countdownValue)")
+                .padding()
+            
+            Circle()
+                .trim(from: 0, to: Double(countdownValue) / 10)
+                .stroke(lineWidth: 10)
+                .rotationEffect(.degrees(-90))
+                .animation(.linear(duration: 1), value: self.countdownValue)
+        }
+        .onChange(of: shouldStartCountdown) { oldValue, newValue in
+            if newValue {
+                // Start the countdown
+                //startCountdown()
+            } else {
+                // Reset the countdown
+                //resetCountdown()
+            }
+        }
+    }
+    
+}
 
 #Preview {
     ZStack {
         Color.mainAccent.ignoresSafeArea()
         VStack {
-            MicrophoneIndicatorView(loudness: 0.5, energyLevel: 0.53, threshold: 0.3, isActive: true)
-            //MicrophoneDialView(sensitivity: .constant(10)), isTranscribing: <#Bool#>
             TestView()
             
         }.frame(width: 100)

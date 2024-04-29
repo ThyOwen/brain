@@ -61,7 +61,7 @@ struct SheetView<Content: View>: View {
          minHeight : CGFloat,
          @ViewBuilder content: () -> Content) {
         #if os(macOS)
-            self.maxHeight = (NSScreen.main?.frame.height ?? 400) * maxHeightFraction 
+            self.maxHeight = (NSScreen.main?.frame.height ?? 400) * maxHeightFraction
         #elseif os(iOS)
             self.maxHeight = UIScreen.main.bounds.height * maxHeightFraction
         #endif
@@ -74,7 +74,13 @@ struct SheetView<Content: View>: View {
     
     var indicator: some View {
         RoundedRectangle(cornerRadius: self.radius)
-            .fill(.gray)
+            .fill(Color.secondAccent.opacity(0.2))
+            .innerShadow(Capsule(),
+                         darkShadow: .darkShadow,
+                         lightShadow: .lightShadow,
+                         spread: 0.5,
+                         radius: 0.75
+            )
             .frame(
                 width: self.indicatorWidth,
                 height: self.indicatorHeight

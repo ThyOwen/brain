@@ -48,6 +48,8 @@
 		8CED83802BCD64C8005E4597 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8CED837F2BCD64C8005E4597 /* WhisperKit */; };
 		8CED83832BCD652E005E4597 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 8CED83822BCD652E005E4597 /* SwiftSoup */; };
 		8CED83852BCD6941005E4597 /* WhisperSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83842BCD6941005E4597 /* WhisperSettingsView.swift */; };
+		8CFD05692BDF2C05004AC073 /* BertRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD05682BDF2C05004AC073 /* BertRuntime.swift */; };
+		8CFD056B2BDF2C81004AC073 /* MicrophoneIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD056A2BDF2C81004AC073 /* MicrophoneIndicatorView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -112,6 +114,8 @@
 		8CED83632BCD64B1005E4597 /* ChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
 		8CED83642BCD64B1005E4597 /* ImageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageData.swift; sourceTree = "<group>"; };
 		8CED83842BCD6941005E4597 /* WhisperSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperSettingsView.swift; sourceTree = "<group>"; };
+		8CFD05682BDF2C05004AC073 /* BertRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BertRuntime.swift; sourceTree = "<group>"; };
+		8CFD056A2BDF2C81004AC073 /* MicrophoneIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneIndicatorView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -156,6 +160,7 @@
 				8C78F1502BCEF11E00043CAF /* MicrophoneDialView.swift */,
 				8C05BB0A2BD594D600AF602D /* MicrophoneButtonView.swift */,
 				8C6C77C22BD88C88000AFBA4 /* RadialLayout.swift */,
+				8CFD056A2BDF2C81004AC073 /* MicrophoneIndicatorView.swift */,
 			);
 			path = controls;
 			sourceTree = "<group>";
@@ -285,6 +290,7 @@
 		8CED83662BCD64B1005E4597 /* backend */ = {
 			isa = PBXGroup;
 			children = (
+				8CFD05672BDF2BF3004AC073 /* BERT */,
 				8CED835F2BCD64B1005E4597 /* whisper */,
 				8CED83602BCD64B1005E4597 /* Chat.swift */,
 				8CED83612BCD64B1005E4597 /* ChatMessages.swift */,
@@ -293,6 +299,14 @@
 				8CED83642BCD64B1005E4597 /* ImageData.swift */,
 			);
 			path = backend;
+			sourceTree = "<group>";
+		};
+		8CFD05672BDF2BF3004AC073 /* BERT */ = {
+			isa = PBXGroup;
+			children = (
+				8CFD05682BDF2C05004AC073 /* BertRuntime.swift */,
+			);
+			path = BERT;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -453,7 +467,9 @@
 				8CED83702BCD64B1005E4597 /* ChatRoledex.swift in Sources */,
 				8C78F14B2BCD79E200043CAF /* SettingsView.swift in Sources */,
 				8CED83772BCD64B1005E4597 /* WhisperRuntime.swift in Sources */,
+				8CFD056B2BDF2C81004AC073 /* MicrophoneIndicatorView.swift in Sources */,
 				8CED837A2BCD64B1005E4597 /* ChatUtilities.swift in Sources */,
+				8CFD05692BDF2C05004AC073 /* BertRuntime.swift in Sources */,
 				8CED83692BCD64B1005E4597 /* InnerShadow.swift in Sources */,
 				8C05BB132BD5BB4E00AF602D /* KarenView.swift in Sources */,
 				8CED831D2BCD63FE005E4597 /* BrainApp.swift in Sources */,
@@ -555,7 +571,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -610,7 +628,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MACOSX_DEPLOYMENT_TARGET = 14.4;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -630,7 +650,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Brain/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allows user to interact with LLM with vocal input";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -673,7 +692,6 @@
 				ENABLE_HARDENED_RUNTIME = YES;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = Brain/Info.plist;
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMicrophoneUsageDescription = "Allows user to interact with LLM with vocal input";
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;

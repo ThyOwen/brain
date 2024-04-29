@@ -12,7 +12,7 @@ struct MicrophoneButtonView: View {
     
     @State public var whisper : Whisper
     
-    private var micIcon : String { self.whisper.isTranscribing ? "stop.circle.fill" : "mic.fill" }
+    private var micIcon : String { self.whisper.isTranscribing || self.whisper.isRecording ? "stop.circle.fill" : "mic.fill" }
 
     private var modelLoaded : Bool {
         !(self.whisper.modelState == .unloaded || self.whisper.modelState == .loaded)

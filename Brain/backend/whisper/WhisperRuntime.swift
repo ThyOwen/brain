@@ -23,7 +23,7 @@ public enum WhisperError : Error {
     public var isRecording: Bool = false
     public var isTranscribing: Bool = false
     public var currentText: String = ""
-    @ObservationIgnored public let modelStorage: String = "huggingface/models/argmaxinc/whisperkit-coreml"
+    public let modelStorage: String = "huggingface/models/argmaxinc/whisperkit-coreml"
 
     // MARK: Model management
 
@@ -32,30 +32,30 @@ public enum WhisperError : Error {
     public var localModelPath: String = ""
     public var availableModels: [String] = []
     public var availableLanguages: [String] = []
-    @ObservationIgnored public var disabledModels: [String] = WhisperKit.recommendedModels().disabled
+    public var disabledModels: [String] = WhisperKit.recommendedModels().disabled
     
     // MARK: Standard properties
     
     public var loadingProgressValue: Float = 0.0
-    @ObservationIgnored public var specializationProgressRatio: Float = 0.7
+    public var specializationProgressRatio: Float = 0.7
     public var isFilePickerPresented = false
-    @ObservationIgnored public var firstTokenTime: TimeInterval = 0
-    @ObservationIgnored public var pipelineStart: TimeInterval = 0
-    @ObservationIgnored public var effectiveRealTimeFactor: TimeInterval = 0
-    @ObservationIgnored public var totalInferenceTime: TimeInterval = 0
+    public var firstTokenTime: TimeInterval = 0
+    public var pipelineStart: TimeInterval = 0
+    public var effectiveRealTimeFactor: TimeInterval = 0
+    public var totalInferenceTime: TimeInterval = 0
     public var tokensPerSecond: TimeInterval = 0
-    @ObservationIgnored public var currentLag: TimeInterval = 0
-    @ObservationIgnored public var currentFallbacks: Int = 0
-    @ObservationIgnored public var currentEncodingLoops: Int = 0
-    @ObservationIgnored public var currentDecodingLoops: Int = 0
-    @ObservationIgnored public var lastBufferSize: Int = 0
-    @ObservationIgnored public var lastConfirmedSegmentEndSeconds: Float = 0
-    @ObservationIgnored public var requiredSegmentsForConfirmation: Int = 4
-    @ObservationIgnored public var bufferEnergy: [Float] = []
-    @ObservationIgnored public var bufferSeconds: Double = 0
-    @ObservationIgnored public var confirmedSegments: [TranscriptionSegment] = []
-    @ObservationIgnored public var unconfirmedSegments: [TranscriptionSegment] = []
-    @ObservationIgnored public var unconfirmedText: [String] = []
+    public var currentLag: TimeInterval = 0
+    public var currentFallbacks: Int = 0
+    public var currentEncodingLoops: Int = 0
+    public var currentDecodingLoops: Int = 0
+    public var lastBufferSize: Int = 0
+    public var lastConfirmedSegmentEndSeconds: Float = 0
+    public var requiredSegmentsForConfirmation: Int = 4
+    public var bufferEnergy: [Float] = []
+    public var bufferSeconds: Double = 0
+    public var confirmedSegments: [TranscriptionSegment] = []
+    public var unconfirmedSegments: [TranscriptionSegment] = []
+    public var unconfirmedText: [String] = []
     
     public var combined : [String] {
         var confirmed = self.confirmedSegments.map { $0.text.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -68,26 +68,35 @@ public enum WhisperError : Error {
     public var appSettings : WhisperSettings = .init()
     // MARK: Eager mode properties
 
-    @ObservationIgnored public var eagerResults: [TranscriptionResult?] = []
-    @ObservationIgnored public var prevResult: TranscriptionResult?
-    @ObservationIgnored public var lastAgreedSeconds: Float = 0.0
-    @ObservationIgnored public var prevWords: [WordTiming] = []
-    @ObservationIgnored public var lastAgreedWords: [WordTiming] = []
-    @ObservationIgnored public var confirmedWords: [WordTiming] = []
-    @ObservationIgnored public var confirmedText: String = ""
-    @ObservationIgnored public var hypothesisWords: [WordTiming] = []
-    @ObservationIgnored public var hypothesisText: String = ""
+    public var eagerResults: [TranscriptionResult?] = []
+    public var prevResult: TranscriptionResult?
+    public var lastAgreedSeconds: Float = 0.0
+    public var prevWords: [WordTiming] = []
+    public var lastAgreedWords: [WordTiming] = []
+    public var confirmedWords: [WordTiming] = []
+    public var confirmedText: String = ""
+    public var hypothesisWords: [WordTiming] = []
+    public var hypothesisText: String = ""
+    public var lastBufferEnergy : Float {
+        get { self.bufferEnergy.last ?? 0.0 }
+    }
 
     // MARK: - Logic
     
-    @ObservationIgnored private var transcriptionTask: Task<Void, Never>? = nil
-    @ObservationIgnored private var visualizeTask: Task<Void, Never>? = nil
+    private var transcriptionTask: Task<Void, Never>? = nil
+    private var visualizeTask: Task<Void, Never>? = nil
     
     @ObservationIgnored public let fftInResolution : Int
     @ObservationIgnored public let fftOutResolution : Int
     @ObservationIgnored private let fftSetup : vDSP_DFT_Setup
     public var fftMagnitudes : [Float]
     public var fftLoudness : Float = 0.0
+    
+    // MARK: - Countdown
+    
+    public var countdownValue : Float = 0 // Initial countdown value
+    public let countdownLimit : Int = 3
+    public var timer : Timer? = nil
 
     init(fftResolution : Int = 16) {
         self.fftOutResolution = fftResolution
@@ -183,7 +192,7 @@ public enum WhisperError : Error {
         Task {
             whisperKit = try await WhisperKit(
                 verbose: true,
-                logLevel: .debug,
+                logLevel: .none,
                 prewarm: false,
                 load: false,
                 download: false
@@ -445,7 +454,7 @@ public enum WhisperError : Error {
         return transcription
     }
 
-    // MARK: Streaming Logic
+    // MARK: - Streaming Logic
 
     func realtimeLoop() {
         transcriptionTask = Task {
@@ -748,6 +757,31 @@ public enum WhisperError : Error {
         let mergedResult = mergeTranscriptionResults(eagerResults, confirmedWords: confirmedWords)
 
         return mergedResult
+    }
+    
+    // MARK: - Auto-sending Logic
+    
+    func startCountdown() {
+        // Reset the countdown value to 10
+        self.countdownValue = Float(self.countdownLimit)
+        
+        // Create and schedule the timer to fire every 1 second
+        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
+            self.countdownValue -= 1
+            // When the countdown reaches zero, stop the timer
+            if self.countdownValue <= 0 {
+                self.timer?.invalidate()
+                self.timer = nil
+            }
+        }
+    }
+    
+    func resetCountdown() {
+        // Invalidate and remove the timer
+        self.timer?.invalidate()
+        self.timer = nil
+        // Reset the countdown value
+        self.countdownValue = 0
     }
 }
 
