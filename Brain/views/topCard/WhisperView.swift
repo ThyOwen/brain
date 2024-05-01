@@ -109,7 +109,6 @@ struct WhisperView: View {
 
     var transcriptionView: some View {
         VStack {
-            KarenView(whisper: self.whisper)
             ScrollView(.horizontal) {
                 HStack(spacing: 1) {
                     let startIndex = max(self.whisper.bufferEnergy.count - 300, 0)

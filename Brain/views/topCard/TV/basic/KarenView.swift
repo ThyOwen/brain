@@ -8,15 +8,10 @@
 import SwiftUI
 import MetalKit
 
-
+/*
 struct KarenView: ViewRepresentable {
     
-    @State var whisper : Whisper = .init()
-    
-    func makeCoordinator() -> KarenRenderer {
-        KarenRenderer(self, fftBuffer: &self.whisper.fftMagnitudes)
-    }
-    
+
     func makeView(context: Context) -> MTKView {
         
         let mtkView = MTKView()
@@ -52,3 +47,4 @@ struct KarenView: ViewRepresentable {
 #Preview {
     KarenView()
 }
+*/

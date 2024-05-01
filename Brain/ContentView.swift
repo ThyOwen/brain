@@ -18,7 +18,8 @@ struct ContentView: View {
     @Namespace private var pannelAnimation
 
     var karenVisualizer : some View {
-        TVView(rimColor: .mainAccent, shadow: 10)
+        TVView(fftSamples: self.whisper.fftMagnitudes,
+               volume: self.whisper.lastBufferEnergy)
             .scenePadding()
             .matchedGeometryEffect(id: "TV", in: pannelAnimation, properties: .frame)
             .transition(.offset())
@@ -102,7 +103,7 @@ struct ContentView: View {
                 
                 HStack(alignment: isPanel ? .bottom : .center, spacing: isPanel ? 25 : 5) {
                     Spacer()
-                    VStack(spacing: isPanel ? 10 : 8) {
+                    VStack(spacing: isPanel ? 15 : 8) {
                         MicrophoneIndicatorView(energyLevel: self.whisper.lastBufferEnergy,
                                                 threshold: self.whisper.appSettings.silenceThreshold,
                                                 isActive: self.whisper.isTranscribing)

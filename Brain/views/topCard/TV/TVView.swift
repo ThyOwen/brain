@@ -6,18 +6,23 @@
 //
 
 import SwiftUI
+import CoreGraphics
 
 struct TVView: View {
     
-    let shadow : CGFloat
-    let rimColor : Color
+    var fftSamples : [Float]
+    var volume : Float 
+    let shadow : CGFloat = 10
+    let rimColor : Color = .mainAccent
     
-    @Namespace private var pannelAnimation
+    @State private var vertices : AnimatableVector = .zero
     
-    init(rimColor : Color, shadow : CGFloat) {
-        self.shadow = shadow
-        self.rimColor = rimColor
+    init(fftSamples: [Float], volume: Float) {
+        self.fftSamples = fftSamples
+        self.volume = volume
+        
     }
+
     
     var body: some View {
         ZStack {
@@ -45,11 +50,26 @@ struct TVView: View {
                 .colorEffect(
                     ShaderLibrary.coloredNoise(.float(0.01), .color(Color(white: 0.25)))
                 )
+            
+            
+            KarenWave(fftSamples: self.fftSamples, volume: self.volume)
+                .stroke(.yellow.gradient,
+                        style: StrokeStyle(lineWidth: 2.0, lineCap: .butt))
+                .padding(.all, 12)
+                .mask {
+                    TV(insetAmount: 12)
+                }
+                
+                
+            
+            
+            TV(insetAmount: 12)
+                .fill(.clear)
                 .innerShadow(TV(insetAmount: 12),
                              darkShadow: .black.opacity(0.7),
                              lightShadow: .white.opacity(0.3),
                              spread: 0.2,
-                             radius: shadow + 10)
+                             radius: shadow + 10)               
 
         }
         .aspectRatio(1.2, contentMode: .fit)
@@ -60,6 +80,6 @@ struct TVView: View {
 #Preview {
     ZStack {
         Color.mainAccent.ignoresSafeArea()
-        TVView(rimColor : .mainAccent, shadow: 10)
+        TVView(fftSamples: (0...31).map { _ in Float.random(in: 0...4.0) }, volume: 0.5)
     }
 }

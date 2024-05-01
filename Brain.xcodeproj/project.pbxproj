@@ -10,10 +10,8 @@
 		8C05BB092BD308B400AF602D /* ToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB082BD308B400AF602D /* ToggleStyle.swift */; };
 		8C05BB0B2BD594D600AF602D /* MicrophoneButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB0A2BD594D600AF602D /* MicrophoneButtonView.swift */; };
 		8C05BB0F2BD5B71100AF602D /* ViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB0E2BD5B71100AF602D /* ViewRepresentable.swift */; };
-		8C05BB112BD5BB0500AF602D /* KarenRender.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB102BD5BB0500AF602D /* KarenRender.swift */; };
 		8C05BB132BD5BB4E00AF602D /* KarenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB122BD5BB4E00AF602D /* KarenView.swift */; };
-		8C05BB162BD5BCE400AF602D /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB152BD5BCE400AF602D /* Shaders.metal */; };
-		8C6C77C32BD88C88000AFBA4 /* RadialLayout.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C6C77C22BD88C88000AFBA4 /* RadialLayout.swift */; };
+		8C534AC02BE1DDED00A812F4 /* AnimateableVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C534ABF2BE1DDED00A812F4 /* AnimateableVector.swift */; };
 		8C78F14B2BCD79E200043CAF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C78F14A2BCD79E200043CAF /* SettingsView.swift */; };
 		8C78F14D2BCD9F8500043CAF /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C78F14C2BCD9F8500043CAF /* StatusView.swift */; };
 		8C78F1512BCEF11E00043CAF /* MicrophoneDialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C78F1502BCEF11E00043CAF /* MicrophoneDialView.swift */; };
@@ -50,6 +48,7 @@
 		8CED83852BCD6941005E4597 /* WhisperSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83842BCD6941005E4597 /* WhisperSettingsView.swift */; };
 		8CFD05692BDF2C05004AC073 /* BertRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD05682BDF2C05004AC073 /* BertRuntime.swift */; };
 		8CFD056B2BDF2C81004AC073 /* MicrophoneIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD056A2BDF2C81004AC073 /* MicrophoneIndicatorView.swift */; };
+		8CFD056F2BDFDFC4004AC073 /* KarenWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD056E2BDFDFC4004AC073 /* KarenWave.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,11 +72,8 @@
 		8C05BB082BD308B400AF602D /* ToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleStyle.swift; sourceTree = "<group>"; };
 		8C05BB0A2BD594D600AF602D /* MicrophoneButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneButtonView.swift; sourceTree = "<group>"; };
 		8C05BB0E2BD5B71100AF602D /* ViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRepresentable.swift; sourceTree = "<group>"; };
-		8C05BB102BD5BB0500AF602D /* KarenRender.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KarenRender.swift; sourceTree = "<group>"; };
 		8C05BB122BD5BB4E00AF602D /* KarenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KarenView.swift; sourceTree = "<group>"; };
-		8C05BB142BD5BCCE00AF602D /* definitions.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = definitions.h; sourceTree = "<group>"; };
-		8C05BB152BD5BCE400AF602D /* Shaders.metal */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
-		8C6C77C22BD88C88000AFBA4 /* RadialLayout.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RadialLayout.swift; sourceTree = "<group>"; };
+		8C534ABF2BE1DDED00A812F4 /* AnimateableVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateableVector.swift; sourceTree = "<group>"; };
 		8C78F14A2BCD79E200043CAF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		8C78F14C2BCD9F8500043CAF /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		8C78F1502BCEF11E00043CAF /* MicrophoneDialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneDialView.swift; sourceTree = "<group>"; };
@@ -116,6 +112,7 @@
 		8CED83842BCD6941005E4597 /* WhisperSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperSettingsView.swift; sourceTree = "<group>"; };
 		8CFD05682BDF2C05004AC073 /* BertRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BertRuntime.swift; sourceTree = "<group>"; };
 		8CFD056A2BDF2C81004AC073 /* MicrophoneIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneIndicatorView.swift; sourceTree = "<group>"; };
+		8CFD056E2BDFDFC4004AC073 /* KarenWave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KarenWave.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -159,7 +156,6 @@
 			children = (
 				8C78F1502BCEF11E00043CAF /* MicrophoneDialView.swift */,
 				8C05BB0A2BD594D600AF602D /* MicrophoneButtonView.swift */,
-				8C6C77C22BD88C88000AFBA4 /* RadialLayout.swift */,
 				8CFD056A2BDF2C81004AC073 /* MicrophoneIndicatorView.swift */,
 			);
 			path = controls;
@@ -240,14 +236,10 @@
 		8CED83502BCD64B1005E4597 /* TV */ = {
 			isa = PBXGroup;
 			children = (
+				8CFD056D2BDFDFB0004AC073 /* basic */,
 				8CED834D2BCD64B1005E4597 /* noisyBackground.metal */,
 				8CED834E2BCD64B1005E4597 /* TVExtras.swift */,
 				8CED834F2BCD64B1005E4597 /* TVView.swift */,
-				8C05BB0E2BD5B71100AF602D /* ViewRepresentable.swift */,
-				8C05BB102BD5BB0500AF602D /* KarenRender.swift */,
-				8C05BB122BD5BB4E00AF602D /* KarenView.swift */,
-				8C05BB142BD5BCCE00AF602D /* definitions.h */,
-				8C05BB152BD5BCE400AF602D /* Shaders.metal */,
 			);
 			path = TV;
 			sourceTree = "<group>";
@@ -307,6 +299,17 @@
 				8CFD05682BDF2C05004AC073 /* BertRuntime.swift */,
 			);
 			path = BERT;
+			sourceTree = "<group>";
+		};
+		8CFD056D2BDFDFB0004AC073 /* basic */ = {
+			isa = PBXGroup;
+			children = (
+				8CFD056E2BDFDFC4004AC073 /* KarenWave.swift */,
+				8C05BB122BD5BB4E00AF602D /* KarenView.swift */,
+				8C05BB0E2BD5B71100AF602D /* ViewRepresentable.swift */,
+				8C534ABF2BE1DDED00A812F4 /* AnimateableVector.swift */,
+			);
+			path = basic;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -464,6 +467,7 @@
 				8CED83722BCD64B1005E4597 /* SheetView.swift in Sources */,
 				8CED83742BCD64B1005E4597 /* WhisperView.swift in Sources */,
 				8C78F14D2BCD9F8500043CAF /* StatusView.swift in Sources */,
+				8C534AC02BE1DDED00A812F4 /* AnimateableVector.swift in Sources */,
 				8CED83702BCD64B1005E4597 /* ChatRoledex.swift in Sources */,
 				8C78F14B2BCD79E200043CAF /* SettingsView.swift in Sources */,
 				8CED83772BCD64B1005E4597 /* WhisperRuntime.swift in Sources */,
@@ -475,12 +479,10 @@
 				8CED831D2BCD63FE005E4597 /* BrainApp.swift in Sources */,
 				8C05BB0B2BD594D600AF602D /* MicrophoneButtonView.swift in Sources */,
 				8CED836B2BCD64B1005E4597 /* OuterShadow.swift in Sources */,
+				8CFD056F2BDFDFC4004AC073 /* KarenWave.swift in Sources */,
 				8CED83762BCD64B1005E4597 /* KarenVisualizer.swift in Sources */,
-				8C05BB112BD5BB0500AF602D /* KarenRender.swift in Sources */,
-				8C6C77C32BD88C88000AFBA4 /* RadialLayout.swift in Sources */,
 				8CED83732BCD64B1005E4597 /* ChatViewModel.swift in Sources */,
 				8CED83672BCD64B1005E4597 /* Borders.swift in Sources */,
-				8C05BB162BD5BCE400AF602D /* Shaders.metal in Sources */,
 				8CED837C2BCD64B1005E4597 /* ImageData.swift in Sources */,
 				8C05BB0F2BD5B71100AF602D /* ViewRepresentable.swift in Sources */,
 			);
@@ -673,7 +675,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = Brain/views/topCard/TV/definitions.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};
@@ -715,7 +717,7 @@
 				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator macosx";
 				SUPPORTS_MACCATALYST = NO;
 				SWIFT_EMIT_LOC_STRINGS = YES;
-				SWIFT_OBJC_BRIDGING_HEADER = Brain/views/topCard/TV/definitions.h;
+				SWIFT_OBJC_BRIDGING_HEADER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = 1;
 			};

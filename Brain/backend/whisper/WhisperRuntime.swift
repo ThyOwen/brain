@@ -86,24 +86,19 @@ public enum WhisperError : Error {
     private var transcriptionTask: Task<Void, Never>? = nil
     private var visualizeTask: Task<Void, Never>? = nil
     
-    @ObservationIgnored public let fftInResolution : Int
-    @ObservationIgnored public let fftOutResolution : Int
-    @ObservationIgnored private let fftSetup : vDSP_DFT_Setup
-    public var fftMagnitudes : [Float]
-    public var fftLoudness : Float = 0.0
+    @ObservationIgnored public let fftInResolution : Int = 64
+    @ObservationIgnored public let fftOutResolution : Int = 32
+    @ObservationIgnored private let fftSetup : vDSP_DFT_Setup = vDSP_DFT_zop_CreateSetup(nil, UInt(64), vDSP_DFT_Direction.FORWARD)!
+    public var fftMagnitudes : [Float] = [Float](repeating: 0.0, count: 32)
     
     // MARK: - Countdown
     
-    public var countdownValue : Float = 0 // Initial countdown value
-    public let countdownLimit : Int = 3
+    public var countdownValue : Int = 0
+    public var countdownDelay : Int = 0
+    public let countdownValueLimit : Int = 3//sec
+    public let countdownDelayLimit : Int = 1//sec
     public var timer : Timer? = nil
-
-    init(fftResolution : Int = 16) {
-        self.fftOutResolution = fftResolution
-        self.fftInResolution = fftResolution * 2
-        self.fftSetup = vDSP_DFT_zop_CreateSetup(nil, UInt(self.fftInResolution), vDSP_DFT_Direction.FORWARD)!
-        self.fftMagnitudes = [Float](repeating: 0.0, count: fftResolution)
-    }
+    public static let mask : Int = 0
     
     func resetState() {
         isRecording = false
@@ -489,24 +484,19 @@ public enum WhisperError : Error {
         
         let currentBuffer = whisperKit.audioProcessor.audioSamples.suffix(self.fftInResolution)
         
-        async let fftMagnitudes = currentBuffer.withUnsafeBufferPointer { currentBufferPointer in
+        var fftMagnitudes = currentBuffer.withUnsafeBufferPointer { currentBufferPointer in
              return Self.fft(data: currentBufferPointer.baseAddress!,
                                               inResolution: self.fftInResolution,
                                               outResolution: self.fftOutResolution,
                                               setup: self.fftSetup)
         }
         
-        async let rmsValue = currentBuffer.withUnsafeBufferPointer { currentBufferPointer in
-            return Self.rms(data: currentBufferPointer.baseAddress!, frameLength: UInt(currentBuffer.count))
-        }
+        fftMagnitudes[0] *= 0.2
+        fftMagnitudes[1] *= 0.4
         
-        let fftLoudnessUnchecked : Float //could be infinite or NaN
-
-        (self.fftMagnitudes, fftLoudnessUnchecked) = await (fftMagnitudes, rmsValue)
+        self.fftMagnitudes = fftMagnitudes
         
-        self.fftLoudness = (fftLoudnessUnchecked.isNaN || fftLoudnessUnchecked.isInfinite) ? 0.0 : fftLoudnessUnchecked
-
-        try await Task.sleep(nanoseconds: 20_000_000)
+        try await Task.sleep(nanoseconds: 100_000_000)
         
     }
     
@@ -763,13 +753,22 @@ public enum WhisperError : Error {
     
     func startCountdown() {
         // Reset the countdown value to 10
-        self.countdownValue = Float(self.countdownLimit)
+        self.countdownDelay = self.countdownDelayLimit
         
         // Create and schedule the timer to fire every 1 second
+        
         self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            self.countdownValue -= 1
+            if self.countdownDelay != 0 {
+                self.countdownDelay -= 1
+                
+                if self.countdownDelay == 0 {
+                    self.countdownValue = self.countdownValueLimit
+                }
+            } else {
+                self.countdownValue -= 1
+            }
             // When the countdown reaches zero, stop the timer
-            if self.countdownValue <= 0 {
+            if self.countdownValue <= 0 && self.countdownDelay <= 0{
                 self.timer?.invalidate()
                 self.timer = nil
             }
@@ -782,6 +781,7 @@ public enum WhisperError : Error {
         self.timer = nil
         // Reset the countdown value
         self.countdownValue = 0
+        self.countdownDelay = 0
     }
 }
 

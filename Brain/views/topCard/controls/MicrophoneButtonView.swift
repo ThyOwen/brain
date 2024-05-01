@@ -130,8 +130,6 @@ struct MicrophoneButtonView: View {
     
 }
 
-
-
 #Preview {
     ZStack {
         Color.mainAccent.ignoresSafeArea()
