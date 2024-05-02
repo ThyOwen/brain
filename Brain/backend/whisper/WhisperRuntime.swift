@@ -15,7 +15,7 @@ public enum WhisperError : Error {
     case microphoneUnavailable
 }
 
-@Observable class Whisper {
+@Observable public class Whisper {
     public var whisperKit: WhisperKit? = nil
     #if os(macOS)
     public var audioDevices: [AudioDevice]? = nil
@@ -98,7 +98,6 @@ public enum WhisperError : Error {
     public let countdownValueLimit : Int = 3//sec
     public let countdownDelayLimit : Int = 1//sec
     public var timer : Timer? = nil
-    public static let mask : Int = 0
     
     func resetState() {
         isRecording = false
@@ -484,19 +483,17 @@ public enum WhisperError : Error {
         
         let currentBuffer = whisperKit.audioProcessor.audioSamples.suffix(self.fftInResolution)
         
-        var fftMagnitudes = currentBuffer.withUnsafeBufferPointer { currentBufferPointer in
-             return Self.fft(data: currentBufferPointer.baseAddress!,
-                                              inResolution: self.fftInResolution,
-                                              outResolution: self.fftOutResolution,
-                                              setup: self.fftSetup)
-        }
+        var fftMagnitudes = Self.fft(data: currentBuffer,
+                                     inResolution: self.fftInResolution,
+                                     outResolution: self.fftOutResolution,
+                                     setup: self.fftSetup)
         
         fftMagnitudes[0] *= 0.2
         fftMagnitudes[1] *= 0.4
         
         self.fftMagnitudes = fftMagnitudes
         
-        try await Task.sleep(nanoseconds: 100_000_000)
+        try await Task.sleep(nanoseconds: 10_000_000)
         
     }
     

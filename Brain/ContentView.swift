@@ -16,6 +16,8 @@ struct ContentView: View {
     @State private var size : CGFloat = 100
     
     @Namespace private var pannelAnimation
+    
+    private var modelLoaded : Bool { self.whisper.modelState == .loaded }
 
     var karenVisualizer : some View {
         TVView(fftSamples: self.whisper.fftMagnitudes,

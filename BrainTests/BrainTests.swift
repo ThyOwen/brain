@@ -6,6 +6,7 @@
 //
 
 import XCTest
+@testable import Brain
 
 final class BrainTests: XCTestCase {
 
@@ -31,6 +32,7 @@ final class BrainTests: XCTestCase {
         measure {
 
         }
+        
     }
 
 }

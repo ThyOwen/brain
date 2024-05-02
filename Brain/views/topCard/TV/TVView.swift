@@ -14,8 +14,7 @@ struct TVView: View {
     var volume : Float 
     let shadow : CGFloat = 10
     let rimColor : Color = .mainAccent
-    
-    @State private var vertices : AnimatableVector = .zero
+
     
     init(fftSamples: [Float], volume: Float) {
         self.fftSamples = fftSamples

@@ -8,7 +8,7 @@
 import SwiftUI
 import WhisperKit
 
-struct WhisperSettings {
+public struct WhisperSettings {
     @AppStorage("selectedAudioInput") public var selectedAudioInput: String = "No Audio Input"
     @AppStorage("selectedModel") public var selectedModel: String = "distil-large-v3_turbo_600MB"
     @AppStorage("selectedTab") public var selectedTab: String = "Transcribe"
