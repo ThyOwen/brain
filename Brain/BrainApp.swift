@@ -9,11 +9,15 @@ import SwiftUI
 
 @main
 struct brainApp: App {
+    
+    @State private var whisper : Whisper = .init()
+    @State private var chatViewModel : ChatViewModel = .init(messageText: "load model to start usage")
+    
     var body: some Scene {
         WindowGroup {
-            //KarenView()
             ContentView()
-            //WhisperView()
+                .environment(self.chatViewModel)
+                .environment(self.whisper)
         }
     }
 }

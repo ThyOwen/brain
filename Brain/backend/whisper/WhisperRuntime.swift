@@ -89,7 +89,7 @@ public enum WhisperError : Error {
     @ObservationIgnored public let fftInResolution : Int = 64
     @ObservationIgnored public let fftOutResolution : Int = 32
     @ObservationIgnored private let fftSetup : vDSP_DFT_Setup = vDSP_DFT_zop_CreateSetup(nil, UInt(64), vDSP_DFT_Direction.FORWARD)!
-    public var fftMagnitudes : [Float] = [Float](repeating: 0.0, count: 32)
+    public var fftMagnitudes : ContiguousArray<Float> = .init(repeating: 0.0001, count: 32)
     
     // MARK: - Countdown
     
@@ -211,12 +211,11 @@ public enum WhisperError : Error {
                     }
                 })
             }
-            
+
             await MainActor.run {
                 loadingProgressValue = specializationProgressRatio
                 modelState = .downloaded
             }
-
 
             if let modelFolder = folder {
                 whisperKit.modelFolder = modelFolder
@@ -260,26 +259,26 @@ public enum WhisperError : Error {
                     if !localModels.contains(model) {
                         localModels.append(model)
                     }
-                    
-                    availableLanguages = whisperKit.tokenizer?.languages.map { $0.key }.sorted() ?? ["english"]
+
+                    availableLanguages = Constants.languages.map { $0.key }.sorted()
                     loadingProgressValue = 1.0
                     modelState = whisperKit.modelState
                 }
             }
         }
     }
-    
+
     func deleteModel() {
         if localModels.contains(self.appSettings.selectedModel) {
             let modelFolder = URL(fileURLWithPath: localModelPath).appendingPathComponent(self.appSettings.selectedModel)
-            
+
             do {
                 try FileManager.default.removeItem(at: modelFolder)
-                
+
                 if let index = localModels.firstIndex(of: self.appSettings.selectedModel) {
                     localModels.remove(at: index)
                 }
-                
+
                 modelState = .unloaded
             } catch {
                 print("Error deleting model: \(error)")
@@ -322,7 +321,10 @@ public enum WhisperError : Error {
     }
 
     func toggleRecording(shouldLoop: Bool) {
-        isRecording.toggle()
+        self.isRecording.toggle()
+        
+        self.fftMagnitudes = ContiguousArray<Float>(repeating: 0.0001, count: 32)
+        
         if isRecording {
             resetState()
             startRecording(shouldLoop)
@@ -338,18 +340,19 @@ public enum WhisperError : Error {
                     print("Microphone access was not granted.")
                     return
                 }
-                
+
                 var deviceId: DeviceID?
                 #if os(macOS)
                 if self.appSettings.selectedAudioInput != "No Audio Input",
                    let devices = self.audioDevices,
-                   let device = devices.first(where: {$0.name == self.appSettings.selectedAudioInput}) {
+                   let device = devices.first(where: { $0.name == self.appSettings.selectedAudioInput })
+                {
                     deviceId = device.id
                 }
 
                 // There is no built-in microphone
                 if deviceId == nil {
-                   throw WhisperError.microphoneUnavailable
+                    throw WhisperError.microphoneUnavailable
                 }
                 #endif
 
@@ -394,7 +397,7 @@ public enum WhisperError : Error {
     func transcribeAudioSamples(_ samples: [Float]) async throws -> TranscriptionResult? {
         guard let whisperKit = whisperKit else { return nil }
 
-        let languageCode = whisperKit.tokenizer?.languages[self.appSettings.selectedLanguage] ?? "en"
+        let languageCode = Constants.languages[self.appSettings.selectedLanguage, default: Constants.defaultLanguageCode]
         let task: DecodingTask = self.appSettings.selectedTask == "transcribe" ? .transcribe : .translate
         let seekClip = [lastConfirmedSegmentEndSeconds]
 
@@ -440,12 +443,14 @@ public enum WhisperError : Error {
             if progress.avgLogprob! < options.logProbThreshold! {
                 return false
             }
-
             return nil
         }
 
-        let transcription = try await whisperKit.transcribe(audioArray: samples, decodeOptions: options, callback: decodingCallback)
-        return transcription
+        return try await whisperKit.transcribe(
+            audioArray: samples,
+            decodeOptions: options,
+            callback: decodingCallback
+        ).first
     }
 
     // MARK: - Streaming Logic
@@ -493,7 +498,7 @@ public enum WhisperError : Error {
         
         self.fftMagnitudes = fftMagnitudes
         
-        try await Task.sleep(nanoseconds: 10_000_000)
+        try await Task.sleep(nanoseconds: 75_000_000)
         
     }
     
@@ -568,14 +573,14 @@ public enum WhisperError : Error {
             // Run realtime transcribe using word timestamps for segmentation
             let transcription = try await transcribeEagerMode(Array(currentBuffer))
             await MainActor.run {
-                self.tokensPerSecond = transcription?.timings?.tokensPerSecond ?? 0
-                self.firstTokenTime = transcription?.timings?.firstTokenTime ?? 0
-                self.pipelineStart = transcription?.timings?.pipelineStart ?? 0
-                self.currentLag = transcription?.timings?.decodingLoop ?? 0
-                self.currentEncodingLoops = Int(transcription?.timings?.totalEncodingRuns ?? 0)
+                self.tokensPerSecond = transcription?.timings.tokensPerSecond ?? 0
+                self.firstTokenTime = transcription?.timings.firstTokenTime ?? 0
+                self.pipelineStart = transcription?.timings.pipelineStart ?? 0
+                self.currentLag = transcription?.timings.decodingLoop ?? 0
+                self.currentEncodingLoops = Int(transcription?.timings.totalEncodingRuns ?? 0)
 
                 let totalAudio = Double(currentBuffer.count) / Double(WhisperKit.sampleRate)
-                self.totalInferenceTime = transcription?.timings?.fullPipeline ?? 0
+                self.totalInferenceTime = transcription?.timings.fullPipeline ?? 0
                 self.effectiveRealTimeFactor = Double(totalInferenceTime) / totalAudio
             }
         } else {
@@ -590,14 +595,14 @@ public enum WhisperError : Error {
                     return
                 }
 
-                self.tokensPerSecond = transcription?.timings?.tokensPerSecond ?? 0
-                self.firstTokenTime = transcription?.timings?.firstTokenTime ?? 0
-                self.pipelineStart = transcription?.timings?.pipelineStart ?? 0
-                self.currentLag = transcription?.timings?.decodingLoop ?? 0
-                self.currentEncodingLoops += Int(transcription?.timings?.totalEncodingRuns ?? 0)
+                self.tokensPerSecond = transcription?.timings.tokensPerSecond ?? 0
+                self.firstTokenTime = transcription?.timings.firstTokenTime ?? 0
+                self.pipelineStart = transcription?.timings.pipelineStart ?? 0
+                self.currentLag = transcription?.timings.decodingLoop ?? 0
+                self.currentEncodingLoops += Int(transcription?.timings.totalEncodingRuns ?? 0)
 
                 let totalAudio = Double(currentBuffer.count) / Double(WhisperKit.sampleRate)
-                self.totalInferenceTime += transcription?.timings?.fullPipeline ?? 0
+                self.totalInferenceTime += transcription?.timings.fullPipeline ?? 0
                 self.effectiveRealTimeFactor = Double(totalInferenceTime) / totalAudio
 
                 // Logic for moving segments to confirmedSegments
@@ -637,7 +642,7 @@ public enum WhisperError : Error {
             return nil
         }
 
-        let languageCode = whisperKit.tokenizer?.languages[self.appSettings.selectedLanguage] ?? "en"
+        let languageCode = Constants.languages[self.appSettings.selectedLanguage, default: Constants.defaultLanguageCode]
         let task: DecodingTask = self.appSettings.selectedTask == "transcribe" ? .transcribe : .translate
 
         let options = DecodingOptions(
@@ -687,7 +692,7 @@ public enum WhisperError : Error {
             return nil
         }
 
-        Logging.info("[EagerMode] \(lastAgreedSeconds)-\(Double(samples.count)/16000.0) seconds")
+        Logging.info("[EagerMode] \(lastAgreedSeconds)-\(Double(samples.count) / 16000.0) seconds")
 
         let streamingAudio = samples
         var streamOptions = options
@@ -695,7 +700,7 @@ public enum WhisperError : Error {
         let lastAgreedTokens = lastAgreedWords.flatMap { $0.tokens }
         streamOptions.prefixTokens = lastAgreedTokens
         do {
-            let transcription: TranscriptionResult? = try await whisperKit.transcribe(audioArray: streamingAudio, decodeOptions: streamOptions, callback: decodingCallback)
+            let transcription: TranscriptionResult? = try await whisperKit.transcribe(audioArray: streamingAudio, decodeOptions: streamOptions, callback: decodingCallback).first
             await MainActor.run {
                 var skipAppend = false
                 if let result = transcription {

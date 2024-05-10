@@ -8,28 +8,7 @@
 import SwiftUI
 import WhisperKit
 
-public struct WhisperSettings {
-    @AppStorage("selectedAudioInput") public var selectedAudioInput: String = "No Audio Input"
-    @AppStorage("selectedModel") public var selectedModel: String = "distil-large-v3_turbo_600MB"
-    @AppStorage("selectedTab") public var selectedTab: String = "Transcribe"
-    @AppStorage("selectedTask") public var selectedTask: String = "transcribe"
-    @AppStorage("selectedLanguage") public var selectedLanguage: String = "english"
-    @AppStorage("repoName") public var repoName: String = "argmaxinc/whisperkit-coreml"
-    @AppStorage("enableTimestamps") public var enableTimestamps: Bool = true
-    @AppStorage("enablePromptPrefill") public var enablePromptPrefill: Bool = true
-    @AppStorage("enableCachePrefill") public var enableCachePrefill: Bool = true
-    @AppStorage("enableSpecialCharacters") public var enableSpecialCharacters: Bool = false
-    @AppStorage("enableEagerDecoding") public var enableEagerDecoding: Bool = false
-    @AppStorage("enableDecoderPreview") public var enableDecoderPreview: Bool = true
-    @AppStorage("temperatureStart") public var temperatureStart: Double = 0
-    @AppStorage("fallbackCount") public var fallbackCount: Double = 5
-    @AppStorage("compressionCheckWindow") public var compressionCheckWindow: Double = 20
-    @AppStorage("sampleLength") public var sampleLength: Double = 224
-    @AppStorage("silenceThreshold") public var silenceThreshold: Double = 0.3
-    @AppStorage("useVAD") public var useVAD: Bool = true
-    @AppStorage("tokenConfirmationsNeeded") public var tokenConfirmationsNeeded: Double = 2
-}
-
+/*
 struct MenuItem: Identifiable, Hashable {
     var id = UUID()
     var name: String
@@ -597,8 +576,17 @@ struct WhisperView: View {
     }
 }
 
-
+fileprivate struct TestView : View {
+    @State var whisper : Whisper = .init()
+    
+    var body : some View {
+        WhisperView()
+            .environment(self.whisper)
+    }
+    
+}
 
 #Preview {
-    WhisperView()
+    TestView()
 }
+*/

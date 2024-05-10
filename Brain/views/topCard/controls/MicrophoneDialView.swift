@@ -174,7 +174,7 @@ struct MicrophoneDialView: View {
     var body: some View {
         ZStack {
             
-            self.completionIndicator
+            //self.completionIndicator
             
             Circle()
                 .fill(.mainAccent)

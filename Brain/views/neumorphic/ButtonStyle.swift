@@ -119,8 +119,6 @@ extension Button {
                                                 lightShadowColor: lightShadowColor,
                                                 pressedEffect : pressedEffect ))
     }
-
-    
 }
 
 #Preview {

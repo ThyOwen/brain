@@ -7,95 +7,65 @@
 
 import SwiftUI
 
-struct ChatRoledex: View {
-    
-    @Binding var chat : Chat
-    @Binding var processing : Bool
-    
-    @State var messageText : String = ""
-    @State var isOpen : Bool = false
-    
-    private var size : CGFloat { isOpen ? 500.0 : 60.0 }
-    
-    var body: some View {
-        VStack {
-                        
-            ScrollView(.vertical, showsIndicators: false) {
-                LazyVStack(spacing: 0) {
-                    ForEach(chat.messages, id: \.id) { message in
-                        messageView(message: message)
-                        
-                            .containerRelativeFrame(.vertical,
-                                                    count: isOpen ? 10 : 2,
-                                                    spacing: 00)
-                            
-                            .scrollTransition { content, phase in
-                                content
-                                    .rotation3DEffect(Angle(degrees: phase.isIdentity ? phase.value * 90 : -phase.value * 90),
-                                                      axis: (x: 1.0, y: 0.0, z: 0.0),
-                                                      anchor: phase.value <= 0 ? .bottom : .top,
-                                                      anchorZ: 0
-                                                      
-                                    )
-                            }
-                            
-                    }
-                }.scrollTargetLayout()
-                    
-            }
-            
-            .contentMargins(10, for: .scrollContent)
-            .scrollTargetBehavior(.viewAligned)
-            
-            //.scrollBounceBehavior(.basedOnSize)
-            
-            /*
-            HStack {
-                TextField("write something down plz", text: $messageText)
-            }*/
-            
-        }
-        .frame(height: size)
-        .animation(.easeInOut, value: size)
-        
+extension View {
+    func addGlowEffect(_ amount : CGFloat) -> some View {
+        self
         .background {
-            RoundedRectangle(cornerRadius: 30).fill(.mainAccent)
-            .innerShadow(RoundedRectangle(cornerRadius: 30),
-                         darkShadow: .darkShadow,
-                         lightShadow: .lightShadow,
-                         spread: 0.1,
-                         radius: 10)
-            }
-        .onTapGesture {
-            withAnimation {
-                isOpen.toggle()
-            }
-        }
-    }
-    
-    func messageView(message : ChatMessage) -> some View {
-        HStack {
-            //message.sender == .user ? Spacer() : nil
-            
-            Text(message.content)
-                .lineLimit(...1)
-                .font(.body)
-                .foregroundColor(isOpen ? .white : (message.sender == .user ? .gray: .black))
-                .padding(isOpen ? 7 : 0)
-                .background(isOpen ? (message.sender == .user ? .darkShadow.opacity(0.8) : .darkShadow.opacity(0.4)) : .clear)
-                .cornerRadius(10)
-                //.padding(.init(top: 0, leading: 20, bottom: 0, trailing: 20))
-                
-            //message.sender == .bot ? Spacer() : nil
+            self.blur(radius: amount).brightness(0.1)
         }
     }
 }
 
-#Preview {
-    ZStack {
-        Color.mainAccent.ignoresSafeArea()
-        ChatRoledex(chat: .constant(Chat(messages: ChatMessage.viewMessages)),
-                    processing: .constant(false))
+
+
+struct ChatRoledex: View {
+    
+    let fontSize : CGFloat
+    
+    @Environment(ChatViewModel.self) private var chatViewModel
+    
+    var body: some View {
+        ZStack(alignment: .leading) {
+            
+            Text(String(repeating: "@", count: self.chatViewModel.characterLimit))
+                .font(.custom("DigitalDream", size: self.fontSize))
+                .foregroundColor(.init(white: 0.1, opacity: 0.5))
+            
+            ZStack(alignment: .leading) {
+                Text(self.chatViewModel.subText)
+                    .font(.custom("DigitalDreamFat", size: self.fontSize))
+                    .foregroundColor(.init(hue: 0.55, saturation: 0.8, brightness: 0.9))
+                Text(self.chatViewModel.subText)
+                    .font(.custom("DigitalDream", size: self.fontSize))
+                    .foregroundColor(.white)
+            }
+            .blur(radius: 0.7, opaque: false)
+            
+            .mask {
+                Text(self.chatViewModel.subText)
+                    .font(.custom("DigitalDream", size: self.fontSize))
+            }
+            .addGlowEffect(0.2)
+        }
+        //.animation(.linear(duration: 1.0).repeatForever(autoreverses: false), value: self.textIdx)
     }
     
+}
+
+fileprivate struct TestView : View {
+    
+    @State var chatViewModel : ChatViewModel = .init(messageText: "Ohio will invade the world")
+    
+    var body: some View {
+        ZStack {
+            Color.black.ignoresSafeArea()
+            ChatRoledex(fontSize: 24)
+                .frame(maxWidth: 300, minHeight: 30, maxHeight: 35)
+        }
+        .environment(self.chatViewModel)
+    }
+}
+
+#Preview {
+    TestView()
 }

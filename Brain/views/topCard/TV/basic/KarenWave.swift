@@ -10,13 +10,13 @@ import simd
 
 public struct KarenWave: Shape {
     
-    var fftSamples : [Float]
+    var fftSamples : ContiguousArray<Float>
     var volume : Float
     
     let indices : [Int]
 
     
-    init(fftSamples: [Float], volume : Float) {
+    init(fftSamples: ContiguousArray<Float>, volume : Float) {
         self.fftSamples = fftSamples
         self.volume = volume
         self.indices = Self.fanoutReorder(length: fftSamples.count)
@@ -100,13 +100,13 @@ public struct KarenWave: Shape {
         return oddArray
     }
     
-    static func normalizeAndScaleSamples( fftSamples : [Float], volume : Float, heightLimit : Float, padding : Float = 10) -> [Float] {
+    static func normalizeAndScaleSamples( fftSamples : ContiguousArray<Float>, volume : Float, heightLimit : Float, padding : Float = 10) -> ContiguousArray<Float> {
         
         var fftSamples = fftSamples
         
         let paddedHeightLimit = heightLimit - padding
         
-        fftSamples.withUnsafeMutableBufferPointer { fftBufferPointer in
+        fftSamples.withContiguousMutableStorageIfAvailable { fftBufferPointer in
             fftBufferPointer.baseAddress!.withMemoryRebound(to: SIMD32<Float>.self, capacity: 1) { buffer in
                 
                 let maxSample = buffer.pointee.max()
@@ -144,7 +144,7 @@ public struct KarenWave: Shape {
     ZStack {
         Color.mainAccent.ignoresSafeArea()
         
-        KarenWave(fftSamples: (0...31).map { _ in Float.random(in: 0...4.0) }, volume: 0.5)
+        KarenWave(fftSamples: ContiguousArray<Float>(repeating: Float.random(in: 0...4.0),count: 32), volume: 0.5)
             .stroke(.green.gradient, style: StrokeStyle(lineWidth: 3.0, lineCap: .round))
     }
     

@@ -7,28 +7,6 @@
 
 import Foundation
 
-
-extension ChatMessage {
-    
-    static let viewMessages = [
-        ChatMessage("Ever have a big kahuna burger",
-                    sender: .user),
-        ChatMessage("no",
-                    sender: .bot),
-        ChatMessage("wanna try one",
-                    sender: .user),        
-        ChatMessage("ain't hurgery",
-                    sender: .bot),
-    ]
-    
-    
-    static let testMessages = [
-        ChatMessage("Ever have a big kahuna burger",
-                    sender: .user)
-    ]
-    
-}
-
 extension String {
     func extractLinks() throws -> [Self] {
         let pattern = #"https?://\S+"#

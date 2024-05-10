@@ -36,9 +36,11 @@ struct SheetView<Content: View>: View {
     let minHeight : CGFloat
     let content: Content
     
+    private let heightDelta : CGFloat
     private let snapDistance : CGFloat
     
     @GestureState private var gestureState: SheetViewGestureState = .inactive
+    
     private var gestureIsOpen : Bool {
         if self.isOpen {
             return abs(self.gestureState.translationHeight) < self.snapDistance
@@ -53,21 +55,29 @@ struct SheetView<Content: View>: View {
     private let snapRatio: CGFloat = 0.25
 
     private var baseOffset: CGFloat {
-        self.isOpen ? self.maxHeight - self.minHeight : 0
+        self.isOpen ? self.heightDelta : 0
+    }
+    
+    private var translationBounds : ClosedRange<CGFloat> {
+        self.isOpen ? (-self.heightDelta)...0 : 0...self.heightDelta
     }
 
     init(isOpen: Binding<Bool>,
          maxHeightFraction: CGFloat,
          minHeight : CGFloat,
          @ViewBuilder content: () -> Content) {
+        
         #if os(macOS)
-            self.maxHeight = (NSScreen.main?.frame.height ?? 400) * maxHeightFraction
+            let maxHeight = (NSScreen.main?.frame.height ?? 400) * maxHeightFraction
         #elseif os(iOS)
-            self.maxHeight = UIScreen.main.bounds.height * maxHeightFraction
+            let maxHeight = UIScreen.main.bounds.height * maxHeightFraction
         #endif
+        self.maxHeight = maxHeight
         self.minHeight = minHeight
         self.content = content()
         self._isOpen = isOpen
+        
+        self.heightDelta = maxHeight - minHeight
         
         self.snapDistance = maxHeight * self.snapRatio
     }
@@ -94,7 +104,12 @@ struct SheetView<Content: View>: View {
     var dragGesture : some Gesture {
         DragGesture()
             .updating(self.$gestureState) { value, state, _ in
-                state = .active(translationHeight: value.translation.height)
+                
+                let clippedHeight = Self.clamp(value.translation.height, in: self.translationBounds)
+                
+                print(value.translation.height)
+                
+                state = .active(translationHeight: clippedHeight)
             }
             .onEnded { value in
                 
@@ -115,7 +130,6 @@ struct SheetView<Content: View>: View {
                     .offset(y: -15)
             }
             .frame(maxWidth: .infinity)
-        //.frame(height: self.minHeight + Self.clamp(self.baseOffset + self.gestureState.translationHeight, in: 0...self.maxHeight), alignment: .bottom)
             .background {
                 ZStack {
                     
@@ -146,7 +160,7 @@ struct SheetView<Content: View>: View {
             .animation(.interactiveSpring, value: self.gestureState.translationHeight)
             .gesture(self.dragGesture)
             .onChange(of: self.gestureIsOpen) { oldValue, newValue in
-                print(self.gestureIsOpen)
+                //print(self.gestureIsOpen)
                 
                 
             }
@@ -158,11 +172,20 @@ struct SheetView<Content: View>: View {
 
 }
 
+fileprivate struct TestView : View {
+    
+    @State private var isOpen : Bool = false
+    
+    var body: some View {
+        SheetView(isOpen: self.$isOpen, maxHeightFraction: 0.5, minHeight: 200) {
+            ZStack {
+                //RoundedRectangle(cornerRadius: 0).fill(Color.red)
+                Text("fuck")
+            }.frame(maxHeight: .infinity)
+        }//.edgesIgnoringSafeArea(.all)
+    }
+}
+
 #Preview {
-    SheetView(isOpen: .constant(false), maxHeightFraction: 0.5, minHeight: 200) {
-        ZStack {
-            //RoundedRectangle(cornerRadius: 0).fill(Color.red)
-            Text("fuck")
-        }.frame(maxHeight: .infinity)
-    }//.edgesIgnoringSafeArea(.all)
+    TestView()
 }

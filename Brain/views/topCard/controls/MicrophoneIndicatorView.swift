@@ -17,7 +17,7 @@ struct MicrophoneIndicatorView : View {
     public var energyLevel : Float
     public var threshold : Double
     public var isActive : Bool
-    public let maxNumBars : Int = 12
+    public let maxNumBars : Int = 16
     
     private var barColor : Color { self.energyLevel > Float(self.threshold) ? Color.green : Color.red }
     private var volumeLevel : Float { self.energyLevel * Float(self.maxNumBars) }
@@ -28,39 +28,23 @@ struct MicrophoneIndicatorView : View {
     var body: some View {
         ZStack {
             Capsule()
-                .inset(by: 3)
-                .fill(.mainAccent)
-            
-            Capsule()
-                .fill(.mainAccent)
-                .innerShadow(Capsule(),
-                             darkShadow: .darkShadow,
-                             lightShadow: .lightShadow,
-                             spread: 0.3,
-                             radius: 5)
-            Capsule()
-                .inset(by: 3)
-                .fill(.mainAccent)
+                .fill(.secondAccent)
             
             HStack(spacing: 1) {
                 ForEach(self.colors, id: \.id) { bar in
-                    RoundedRectangle(cornerRadius: 1, style: .circular)
+                    Capsule()
                         .fill(bar.color)
-                        .innerShadow(RoundedRectangle(cornerRadius: 1, style: .circular),
-                                     darkShadow: .darkShadow,
-                                     lightShadow: .lightShadow, spread: 0.2, radius: 0.5)
-                        .padding(.vertical, 3)
+                        .padding(.vertical, 1)
                         
                 }
             }
-            .mask {
-                Capsule()
-                    .inset(by: 3)
-            }
+            .blur(radius: 1.0)
             
 
         }
-        .frame(minHeight: 30, maxHeight: 35)
+        .mask {
+            Capsule()
+        }
     }
     
     private func getBarColor(_ idx : Int) -> Color {
@@ -79,6 +63,6 @@ struct MicrophoneIndicatorView : View {
     ZStack {
         Color.mainAccent.ignoresSafeArea()
         MicrophoneIndicatorView(energyLevel: 0.5, threshold: 0.1, isActive: false)
-            .frame(width: 100)
+            .frame(width: 250)
     }
 }
