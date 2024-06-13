@@ -9,39 +9,60 @@
 /* Begin PBXBuildFile section */
 		8C05BB092BD308B400AF602D /* ToggleStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB082BD308B400AF602D /* ToggleStyle.swift */; };
 		8C05BB0B2BD594D600AF602D /* MicrophoneButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB0A2BD594D600AF602D /* MicrophoneButtonView.swift */; };
-		8C05BB0F2BD5B71100AF602D /* ViewRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB0E2BD5B71100AF602D /* ViewRepresentable.swift */; };
-		8C05BB132BD5BB4E00AF602D /* KarenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C05BB122BD5BB4E00AF602D /* KarenView.swift */; };
-		8C534AC02BE1DDED00A812F4 /* AnimateableVector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C534ABF2BE1DDED00A812F4 /* AnimateableVector.swift */; };
+		8C4EA8032BFBED4D00613E5C /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4EA8022BFBED4D00613E5C /* LoadingView.swift */; };
 		8C565C522BEBBD8700F0718C /* ScaleButtonStyle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C565C512BEBBD8700F0718C /* ScaleButtonStyle.swift */; };
-		8C75EF652BE8530C00B7426F /* DIGITALDREAM.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF5D2BE8530C00B7426F /* DIGITALDREAM.ttf */; };
-		8C75EF662BE8530C00B7426F /* DIGITALDREAMSKEW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF5E2BE8530C00B7426F /* DIGITALDREAMSKEW.ttf */; };
-		8C75EF672BE8530C00B7426F /* DIGITALDREAMSKEWNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF5F2BE8530C00B7426F /* DIGITALDREAMSKEWNARROW.ttf */; };
-		8C75EF682BE8530C00B7426F /* DIGITALDREAMNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF602BE8530C00B7426F /* DIGITALDREAMNARROW.ttf */; };
-		8C75EF692BE8530C00B7426F /* DIGITALDREAMFATNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF612BE8530C00B7426F /* DIGITALDREAMFATNARROW.ttf */; };
-		8C75EF6A2BE8530C00B7426F /* DIGITALDREAMFATSKEW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF622BE8530C00B7426F /* DIGITALDREAMFATSKEW.ttf */; };
-		8C75EF6B2BE8530C00B7426F /* DIGITALDREAMFATSKEWNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF632BE8530C00B7426F /* DIGITALDREAMFATSKEWNARROW.ttf */; };
-		8C75EF6C2BE8530C00B7426F /* DIGITALDREAMFAT.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF642BE8530C00B7426F /* DIGITALDREAMFAT.ttf */; };
-		8C75EF6E2BE8543F00B7426F /* DIGITALDREAM.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF5D2BE8530C00B7426F /* DIGITALDREAM.ttf */; };
-		8C75EF762BE8544300B7426F /* DIGITALDREAMFATSKEWNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF632BE8530C00B7426F /* DIGITALDREAMFATSKEWNARROW.ttf */; };
-		8C75EF772BE8544300B7426F /* DIGITALDREAMFATNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF612BE8530C00B7426F /* DIGITALDREAMFATNARROW.ttf */; };
-		8C75EF782BE8544300B7426F /* DIGITALDREAMNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF602BE8530C00B7426F /* DIGITALDREAMNARROW.ttf */; };
-		8C75EF792BE8544300B7426F /* DIGITALDREAM.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF5D2BE8530C00B7426F /* DIGITALDREAM.ttf */; };
-		8C75EF7A2BE8544300B7426F /* DIGITALDREAMSKEW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF5E2BE8530C00B7426F /* DIGITALDREAMSKEW.ttf */; };
-		8C75EF7B2BE8544300B7426F /* DIGITALDREAMFAT.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF642BE8530C00B7426F /* DIGITALDREAMFAT.ttf */; };
-		8C75EF7C2BE8544300B7426F /* DIGITALDREAMSKEWNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF5F2BE8530C00B7426F /* DIGITALDREAMSKEWNARROW.ttf */; };
-		8C75EF7D2BE8544300B7426F /* DIGITALDREAMFATSKEW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF622BE8530C00B7426F /* DIGITALDREAMFATSKEW.ttf */; };
-		8C75EF7E2BE8544300B7426F /* DIGITALDREAMFATSKEWNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF632BE8530C00B7426F /* DIGITALDREAMFATSKEWNARROW.ttf */; };
-		8C75EF7F2BE8544300B7426F /* DIGITALDREAMFATNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF612BE8530C00B7426F /* DIGITALDREAMFATNARROW.ttf */; };
-		8C75EF802BE8544300B7426F /* DIGITALDREAMNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF602BE8530C00B7426F /* DIGITALDREAMNARROW.ttf */; };
-		8C75EF812BE8544300B7426F /* DIGITALDREAMSKEW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF5E2BE8530C00B7426F /* DIGITALDREAMSKEW.ttf */; };
-		8C75EF822BE8544300B7426F /* DIGITALDREAMFAT.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF642BE8530C00B7426F /* DIGITALDREAMFAT.ttf */; };
-		8C75EF832BE8544300B7426F /* DIGITALDREAMSKEWNARROW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF5F2BE8530C00B7426F /* DIGITALDREAMSKEWNARROW.ttf */; };
-		8C75EF842BE8544300B7426F /* DIGITALDREAMFATSKEW.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8C75EF622BE8530C00B7426F /* DIGITALDREAMFATSKEW.ttf */; };
+		8C57B73B2C0643EA008C7527 /* startup0.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159582C060A520087AF9C /* startup0.aif */; };
+		8C57B73C2C0643EA008C7527 /* startup1.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159592C060A520087AF9C /* startup1.aif */; };
+		8C57B73D2C0643EA008C7527 /* startup3.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159552C060A520087AF9C /* startup3.aif */; };
+		8C57B73E2C0643EA008C7527 /* startup2.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159572C060A520087AF9C /* startup2.aif */; };
 		8C77A1C32BE9DB5D002D6045 /* ControlsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C77A1C22BE9DB5D002D6045 /* ControlsView.swift */; };
 		8C78F14B2BCD79E200043CAF /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C78F14A2BCD79E200043CAF /* SettingsView.swift */; };
-		8C78F14D2BCD9F8500043CAF /* StatusView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C78F14C2BCD9F8500043CAF /* StatusView.swift */; };
 		8C78F1512BCEF11E00043CAF /* MicrophoneDialView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C78F1502BCEF11E00043CAF /* MicrophoneDialView.swift */; };
+		8C81595A2C060A520087AF9C /* Hit 2.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159522C060A520087AF9C /* Hit 2.aif */; };
+		8C81595B2C060A520087AF9C /* Hit 3.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159532C060A520087AF9C /* Hit 3.aif */; };
+		8C81595C2C060A520087AF9C /* Hit 1.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159542C060A520087AF9C /* Hit 1.aif */; };
+		8C81595D2C060A520087AF9C /* startup3.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159552C060A520087AF9C /* startup3.aif */; };
+		8C81595F2C060A520087AF9C /* startup2.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159572C060A520087AF9C /* startup2.aif */; };
+		8C8159602C060A520087AF9C /* startup0.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159582C060A520087AF9C /* startup0.aif */; };
+		8C8159612C060A520087AF9C /* startup1.aif in Resources */ = {isa = PBXBuildFile; fileRef = 8C8159592C060A520087AF9C /* startup1.aif */; };
+		8C819F072BF63FF2003C9B41 /* ChatEntry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C819F062BF63FF2003C9B41 /* ChatEntry.swift */; };
+		8C819F0B2BF6402C003C9B41 /* ServerMessage.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C819F0A2BF6402C003C9B41 /* ServerMessage.swift */; };
+		8C819F0D2BF6404C003C9B41 /* ClientCommands.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C819F0C2BF6404C003C9B41 /* ClientCommands.swift */; };
+		8C819F0F2BF6432D003C9B41 /* ChatTestView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C819F0E2BF6432D003C9B41 /* ChatTestView.swift */; };
+		8C819F112BF68665003C9B41 /* MessageBoard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C819F102BF68665003C9B41 /* MessageBoard.swift */; };
 		8CC782CF2BED328D00C5C373 /* zig.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CC782CE2BED328D00C5C373 /* zig.ttf */; };
+		8CE74B452BEEEF0F0041C2D3 /* DigitalDream.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B282BEEEF0F0041C2D3 /* DigitalDream.ttf */; };
+		8CE74B462BEEEF0F0041C2D3 /* DigitalDreamBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B292BEEEF0F0041C2D3 /* DigitalDreamBold.ttf */; };
+		8CE74B482BEEEF0F0041C2D3 /* DigitalDreamBoldSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B2B2BEEEF0F0041C2D3 /* DigitalDreamBoldSkew.ttf */; };
+		8CE74B4B2BEEEF0F0041C2D3 /* DigitalDreamSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B2E2BEEEF0F0041C2D3 /* DigitalDreamSkew.ttf */; };
+		8CE74B502BEEEF0F0041C2D3 /* Futura.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B342BEEEF0F0041C2D3 /* Futura.ttf */; };
+		8CE74B512BEEEF0F0041C2D3 /* FuturaSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B352BEEEF0F0041C2D3 /* FuturaSkew.ttf */; };
+		8CE74B532BEEEF0F0041C2D3 /* FuturaHeavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B372BEEEF0F0041C2D3 /* FuturaHeavy.ttf */; };
+		8CE74B542BEEEF0F0041C2D3 /* FuturaHeavySkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B382BEEEF0F0041C2D3 /* FuturaHeavySkew.ttf */; };
+		8CE74B552BEEEF0F0041C2D3 /* FuturaLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B392BEEEF0F0041C2D3 /* FuturaLight.ttf */; };
+		8CE74B572BEEEF0F0041C2D3 /* FuturaLightSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B3B2BEEEF0F0041C2D3 /* FuturaLightSkew.ttf */; };
+		8CE74B602BEEF3CD0041C2D3 /* DigitalDreamBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B292BEEEF0F0041C2D3 /* DigitalDreamBold.ttf */; };
+		8CE74B612BEEF3CE0041C2D3 /* DigitalDreamBold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B292BEEEF0F0041C2D3 /* DigitalDreamBold.ttf */; };
+		8CE74B622BEEF3D00041C2D3 /* DigitalDreamBoldSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B2B2BEEEF0F0041C2D3 /* DigitalDreamBoldSkew.ttf */; };
+		8CE74B632BEEF3D10041C2D3 /* DigitalDreamBoldSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B2B2BEEEF0F0041C2D3 /* DigitalDreamBoldSkew.ttf */; };
+		8CE74B642BEEF3DD0041C2D3 /* DigitalDream.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B282BEEEF0F0041C2D3 /* DigitalDream.ttf */; };
+		8CE74B652BEEF3DD0041C2D3 /* DigitalDreamSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B2E2BEEEF0F0041C2D3 /* DigitalDreamSkew.ttf */; };
+		8CE74B662BEEF3DD0041C2D3 /* DigitalDream.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B282BEEEF0F0041C2D3 /* DigitalDream.ttf */; };
+		8CE74B672BEEF3DD0041C2D3 /* DigitalDreamSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B2E2BEEEF0F0041C2D3 /* DigitalDreamSkew.ttf */; };
+		8CE74B682BEEF3E10041C2D3 /* FuturaLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B392BEEEF0F0041C2D3 /* FuturaLight.ttf */; };
+		8CE74B692BEEF3E10041C2D3 /* FuturaLightSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B3B2BEEEF0F0041C2D3 /* FuturaLightSkew.ttf */; };
+		8CE74B6A2BEEF3E10041C2D3 /* FuturaHeavySkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B382BEEEF0F0041C2D3 /* FuturaHeavySkew.ttf */; };
+		8CE74B6B2BEEF3E10041C2D3 /* zig.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CC782CE2BED328D00C5C373 /* zig.ttf */; };
+		8CE74B6C2BEEF3E10041C2D3 /* FuturaHeavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B372BEEEF0F0041C2D3 /* FuturaHeavy.ttf */; };
+		8CE74B6D2BEEF3E10041C2D3 /* FuturaSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B352BEEEF0F0041C2D3 /* FuturaSkew.ttf */; };
+		8CE74B6E2BEEF3E10041C2D3 /* Futura.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B342BEEEF0F0041C2D3 /* Futura.ttf */; };
+		8CE74B6F2BEEF3E10041C2D3 /* FuturaLight.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B392BEEEF0F0041C2D3 /* FuturaLight.ttf */; };
+		8CE74B702BEEF3E10041C2D3 /* FuturaLightSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B3B2BEEEF0F0041C2D3 /* FuturaLightSkew.ttf */; };
+		8CE74B712BEEF3E10041C2D3 /* FuturaHeavySkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B382BEEEF0F0041C2D3 /* FuturaHeavySkew.ttf */; };
+		8CE74B722BEEF3E10041C2D3 /* zig.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CC782CE2BED328D00C5C373 /* zig.ttf */; };
+		8CE74B732BEEF3E10041C2D3 /* FuturaHeavy.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B372BEEEF0F0041C2D3 /* FuturaHeavy.ttf */; };
+		8CE74B742BEEF3E10041C2D3 /* FuturaSkew.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B352BEEEF0F0041C2D3 /* FuturaSkew.ttf */; };
+		8CE74B752BEEF3E10041C2D3 /* Futura.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 8CE74B342BEEEF0F0041C2D3 /* Futura.ttf */; };
 		8CED831D2BCD63FE005E4597 /* BrainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED831C2BCD63FE005E4597 /* BrainApp.swift */; };
 		8CED831F2BCD63FE005E4597 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED831E2BCD63FE005E4597 /* ContentView.swift */; };
 		8CED83212BCD63FF005E4597 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8CED83202BCD63FF005E4597 /* Assets.xcassets */; };
@@ -58,21 +79,15 @@
 		8CED836D2BCD64B1005E4597 /* TVExtras.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED834E2BCD64B1005E4597 /* TVExtras.swift */; };
 		8CED836E2BCD64B1005E4597 /* TVView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED834F2BCD64B1005E4597 /* TVView.swift */; };
 		8CED836F2BCD64B1005E4597 /* AsyncButton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83512BCD64B1005E4597 /* AsyncButton.swift */; };
-		8CED83702BCD64B1005E4597 /* ChatRoledex.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83522BCD64B1005E4597 /* ChatRoledex.swift */; };
-		8CED83712BCD64B1005E4597 /* SearchBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83532BCD64B1005E4597 /* SearchBar.swift */; };
+		8CED83702BCD64B1005E4597 /* MessageBoardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83522BCD64B1005E4597 /* MessageBoardView.swift */; };
 		8CED83722BCD64B1005E4597 /* SheetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83542BCD64B1005E4597 /* SheetView.swift */; };
 		8CED83742BCD64B1005E4597 /* WhisperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83572BCD64B1005E4597 /* WhisperView.swift */; };
-		8CED83762BCD64B1005E4597 /* KarenVisualizer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED835D2BCD64B1005E4597 /* KarenVisualizer.swift */; };
 		8CED83772BCD64B1005E4597 /* WhisperRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED835E2BCD64B1005E4597 /* WhisperRuntime.swift */; };
 		8CED83782BCD64B1005E4597 /* Chat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83602BCD64B1005E4597 /* Chat.swift */; };
-		8CED83792BCD64B1005E4597 /* ChatMessages.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83612BCD64B1005E4597 /* ChatMessages.swift */; };
 		8CED837A2BCD64B1005E4597 /* ChatUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83622BCD64B1005E4597 /* ChatUtilities.swift */; };
-		8CED837B2BCD64B1005E4597 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83632BCD64B1005E4597 /* ChatView.swift */; };
-		8CED837C2BCD64B1005E4597 /* ImageData.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83642BCD64B1005E4597 /* ImageData.swift */; };
 		8CED83802BCD64C8005E4597 /* WhisperKit in Frameworks */ = {isa = PBXBuildFile; productRef = 8CED837F2BCD64C8005E4597 /* WhisperKit */; };
-		8CED83832BCD652E005E4597 /* SwiftSoup in Frameworks */ = {isa = PBXBuildFile; productRef = 8CED83822BCD652E005E4597 /* SwiftSoup */; };
 		8CED83852BCD6941005E4597 /* WhisperSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CED83842BCD6941005E4597 /* WhisperSettingsView.swift */; };
-		8CFD05692BDF2C05004AC073 /* BertRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD05682BDF2C05004AC073 /* BertRuntime.swift */; };
+		8CF17F932BF7B41C00215153 /* NWParametersWithPasskey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CF17F922BF7B41C00215153 /* NWParametersWithPasskey.swift */; };
 		8CFD056B2BDF2C81004AC073 /* MicrophoneIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD056A2BDF2C81004AC073 /* MicrophoneIndicatorView.swift */; };
 		8CFD056F2BDFDFC4004AC073 /* KarenWave.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFD056E2BDFDFC4004AC073 /* KarenWave.swift */; };
 		8CFECC8C2BE6AF5A00C3EA62 /* ChatViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8CFECC8B2BE6AF5A00C3EA62 /* ChatViewModel.swift */; };
@@ -98,23 +113,34 @@
 /* Begin PBXFileReference section */
 		8C05BB082BD308B400AF602D /* ToggleStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleStyle.swift; sourceTree = "<group>"; };
 		8C05BB0A2BD594D600AF602D /* MicrophoneButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneButtonView.swift; sourceTree = "<group>"; };
-		8C05BB0E2BD5B71100AF602D /* ViewRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewRepresentable.swift; sourceTree = "<group>"; };
-		8C05BB122BD5BB4E00AF602D /* KarenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KarenView.swift; sourceTree = "<group>"; };
-		8C534ABF2BE1DDED00A812F4 /* AnimateableVector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnimateableVector.swift; sourceTree = "<group>"; };
+		8C4EA8022BFBED4D00613E5C /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		8C565C512BEBBD8700F0718C /* ScaleButtonStyle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScaleButtonStyle.swift; sourceTree = "<group>"; };
-		8C75EF5D2BE8530C00B7426F /* DIGITALDREAM.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DIGITALDREAM.ttf; sourceTree = "<group>"; };
-		8C75EF5E2BE8530C00B7426F /* DIGITALDREAMSKEW.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DIGITALDREAMSKEW.ttf; sourceTree = "<group>"; };
-		8C75EF5F2BE8530C00B7426F /* DIGITALDREAMSKEWNARROW.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DIGITALDREAMSKEWNARROW.ttf; sourceTree = "<group>"; };
-		8C75EF602BE8530C00B7426F /* DIGITALDREAMNARROW.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DIGITALDREAMNARROW.ttf; sourceTree = "<group>"; };
-		8C75EF612BE8530C00B7426F /* DIGITALDREAMFATNARROW.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DIGITALDREAMFATNARROW.ttf; sourceTree = "<group>"; };
-		8C75EF622BE8530C00B7426F /* DIGITALDREAMFATSKEW.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DIGITALDREAMFATSKEW.ttf; sourceTree = "<group>"; };
-		8C75EF632BE8530C00B7426F /* DIGITALDREAMFATSKEWNARROW.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DIGITALDREAMFATSKEWNARROW.ttf; sourceTree = "<group>"; };
-		8C75EF642BE8530C00B7426F /* DIGITALDREAMFAT.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DIGITALDREAMFAT.ttf; sourceTree = "<group>"; };
 		8C77A1C22BE9DB5D002D6045 /* ControlsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ControlsView.swift; sourceTree = "<group>"; };
 		8C78F14A2BCD79E200043CAF /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
-		8C78F14C2BCD9F8500043CAF /* StatusView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StatusView.swift; sourceTree = "<group>"; };
 		8C78F1502BCEF11E00043CAF /* MicrophoneDialView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneDialView.swift; sourceTree = "<group>"; };
+		8C8159522C060A520087AF9C /* Hit 2.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hit 2.aif"; sourceTree = "<group>"; };
+		8C8159532C060A520087AF9C /* Hit 3.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hit 3.aif"; sourceTree = "<group>"; };
+		8C8159542C060A520087AF9C /* Hit 1.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Hit 1.aif"; sourceTree = "<group>"; };
+		8C8159552C060A520087AF9C /* startup3.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = startup3.aif; sourceTree = "<group>"; };
+		8C8159572C060A520087AF9C /* startup2.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = startup2.aif; sourceTree = "<group>"; };
+		8C8159582C060A520087AF9C /* startup0.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = startup0.aif; sourceTree = "<group>"; };
+		8C8159592C060A520087AF9C /* startup1.aif */ = {isa = PBXFileReference; lastKnownFileType = file; path = startup1.aif; sourceTree = "<group>"; };
+		8C819F062BF63FF2003C9B41 /* ChatEntry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatEntry.swift; sourceTree = "<group>"; };
+		8C819F0A2BF6402C003C9B41 /* ServerMessage.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServerMessage.swift; sourceTree = "<group>"; };
+		8C819F0C2BF6404C003C9B41 /* ClientCommands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ClientCommands.swift; sourceTree = "<group>"; };
+		8C819F0E2BF6432D003C9B41 /* ChatTestView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatTestView.swift; sourceTree = "<group>"; };
+		8C819F102BF68665003C9B41 /* MessageBoard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBoard.swift; sourceTree = "<group>"; };
 		8CC782CE2BED328D00C5C373 /* zig.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = zig.ttf; sourceTree = "<group>"; };
+		8CE74B282BEEEF0F0041C2D3 /* DigitalDream.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DigitalDream.ttf; sourceTree = "<group>"; };
+		8CE74B292BEEEF0F0041C2D3 /* DigitalDreamBold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DigitalDreamBold.ttf; sourceTree = "<group>"; };
+		8CE74B2B2BEEEF0F0041C2D3 /* DigitalDreamBoldSkew.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DigitalDreamBoldSkew.ttf; sourceTree = "<group>"; };
+		8CE74B2E2BEEEF0F0041C2D3 /* DigitalDreamSkew.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = DigitalDreamSkew.ttf; sourceTree = "<group>"; };
+		8CE74B342BEEEF0F0041C2D3 /* Futura.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Futura.ttf; sourceTree = "<group>"; };
+		8CE74B352BEEEF0F0041C2D3 /* FuturaSkew.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FuturaSkew.ttf; sourceTree = "<group>"; };
+		8CE74B372BEEEF0F0041C2D3 /* FuturaHeavy.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FuturaHeavy.ttf; sourceTree = "<group>"; };
+		8CE74B382BEEEF0F0041C2D3 /* FuturaHeavySkew.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FuturaHeavySkew.ttf; sourceTree = "<group>"; };
+		8CE74B392BEEEF0F0041C2D3 /* FuturaLight.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FuturaLight.ttf; sourceTree = "<group>"; };
+		8CE74B3B2BEEEF0F0041C2D3 /* FuturaLightSkew.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = FuturaLightSkew.ttf; sourceTree = "<group>"; };
 		8CED83192BCD63FE005E4597 /* Brain.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Brain.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		8CED831C2BCD63FE005E4597 /* BrainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrainApp.swift; sourceTree = "<group>"; };
 		8CED831E2BCD63FE005E4597 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
@@ -135,19 +161,14 @@
 		8CED834E2BCD64B1005E4597 /* TVExtras.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVExtras.swift; sourceTree = "<group>"; };
 		8CED834F2BCD64B1005E4597 /* TVView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TVView.swift; sourceTree = "<group>"; };
 		8CED83512BCD64B1005E4597 /* AsyncButton.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AsyncButton.swift; sourceTree = "<group>"; };
-		8CED83522BCD64B1005E4597 /* ChatRoledex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatRoledex.swift; sourceTree = "<group>"; };
-		8CED83532BCD64B1005E4597 /* SearchBar.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchBar.swift; sourceTree = "<group>"; };
+		8CED83522BCD64B1005E4597 /* MessageBoardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageBoardView.swift; sourceTree = "<group>"; };
 		8CED83542BCD64B1005E4597 /* SheetView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SheetView.swift; sourceTree = "<group>"; };
 		8CED83572BCD64B1005E4597 /* WhisperView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhisperView.swift; sourceTree = "<group>"; };
-		8CED835D2BCD64B1005E4597 /* KarenVisualizer.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KarenVisualizer.swift; sourceTree = "<group>"; };
 		8CED835E2BCD64B1005E4597 /* WhisperRuntime.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WhisperRuntime.swift; sourceTree = "<group>"; };
 		8CED83602BCD64B1005E4597 /* Chat.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Chat.swift; sourceTree = "<group>"; };
-		8CED83612BCD64B1005E4597 /* ChatMessages.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatMessages.swift; sourceTree = "<group>"; };
 		8CED83622BCD64B1005E4597 /* ChatUtilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatUtilities.swift; sourceTree = "<group>"; };
-		8CED83632BCD64B1005E4597 /* ChatView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
-		8CED83642BCD64B1005E4597 /* ImageData.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ImageData.swift; sourceTree = "<group>"; };
 		8CED83842BCD6941005E4597 /* WhisperSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WhisperSettingsView.swift; sourceTree = "<group>"; };
-		8CFD05682BDF2C05004AC073 /* BertRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BertRuntime.swift; sourceTree = "<group>"; };
+		8CF17F922BF7B41C00215153 /* NWParametersWithPasskey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NWParametersWithPasskey.swift; sourceTree = "<group>"; };
 		8CFD056A2BDF2C81004AC073 /* MicrophoneIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MicrophoneIndicatorView.swift; sourceTree = "<group>"; };
 		8CFD056E2BDFDFC4004AC073 /* KarenWave.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KarenWave.swift; sourceTree = "<group>"; };
 		8CFECC8B2BE6AF5A00C3EA62 /* ChatViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChatViewModel.swift; sourceTree = "<group>"; };
@@ -159,7 +180,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				8CED83802BCD64C8005E4597 /* WhisperKit in Frameworks */,
-				8CED83832BCD652E005E4597 /* SwiftSoup in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +220,76 @@
 			path = controls;
 			sourceTree = "<group>";
 		};
+		8C8159502C0609ED0087AF9C /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				8CFECC8D2BE6C5A100C3EA62 /* retro_assets */,
+				8C8159512C0609F90087AF9C /* sounds */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		8C8159512C0609F90087AF9C /* sounds */ = {
+			isa = PBXGroup;
+			children = (
+				8C8159542C060A520087AF9C /* Hit 1.aif */,
+				8C8159522C060A520087AF9C /* Hit 2.aif */,
+				8C8159532C060A520087AF9C /* Hit 3.aif */,
+				8C8159582C060A520087AF9C /* startup0.aif */,
+				8C8159592C060A520087AF9C /* startup1.aif */,
+				8C8159572C060A520087AF9C /* startup2.aif */,
+				8C8159552C060A520087AF9C /* startup3.aif */,
+			);
+			path = sounds;
+			sourceTree = "<group>";
+		};
+		8C819F002BF63F45003C9B41 /* network */ = {
+			isa = PBXGroup;
+			children = (
+				8C819F062BF63FF2003C9B41 /* ChatEntry.swift */,
+				8C819F0A2BF6402C003C9B41 /* ServerMessage.swift */,
+				8C819F0C2BF6404C003C9B41 /* ClientCommands.swift */,
+			);
+			path = network;
+			sourceTree = "<group>";
+		};
+		8CC782D02BEE8E9000C5C373 /* chat */ = {
+			isa = PBXGroup;
+			children = (
+				8CED83602BCD64B1005E4597 /* Chat.swift */,
+				8CED83622BCD64B1005E4597 /* ChatUtilities.swift */,
+				8CFECC8B2BE6AF5A00C3EA62 /* ChatViewModel.swift */,
+				8C819F0E2BF6432D003C9B41 /* ChatTestView.swift */,
+				8C819F002BF63F45003C9B41 /* network */,
+				8CF17F922BF7B41C00215153 /* NWParametersWithPasskey.swift */,
+			);
+			path = chat;
+			sourceTree = "<group>";
+		};
+		8CE74B302BEEEF0F0041C2D3 /* digital_dream */ = {
+			isa = PBXGroup;
+			children = (
+				8CE74B282BEEEF0F0041C2D3 /* DigitalDream.ttf */,
+				8CE74B2E2BEEEF0F0041C2D3 /* DigitalDreamSkew.ttf */,
+				8CE74B292BEEEF0F0041C2D3 /* DigitalDreamBold.ttf */,
+				8CE74B2B2BEEEF0F0041C2D3 /* DigitalDreamBoldSkew.ttf */,
+			);
+			path = digital_dream;
+			sourceTree = "<group>";
+		};
+		8CE74B442BEEEF0F0041C2D3 /* futura */ = {
+			isa = PBXGroup;
+			children = (
+				8CE74B342BEEEF0F0041C2D3 /* Futura.ttf */,
+				8CE74B352BEEEF0F0041C2D3 /* FuturaSkew.ttf */,
+				8CE74B372BEEEF0F0041C2D3 /* FuturaHeavy.ttf */,
+				8CE74B382BEEEF0F0041C2D3 /* FuturaHeavySkew.ttf */,
+				8CE74B392BEEEF0F0041C2D3 /* FuturaLight.ttf */,
+				8CE74B3B2BEEEF0F0041C2D3 /* FuturaLightSkew.ttf */,
+			);
+			path = futura;
+			sourceTree = "<group>";
+		};
 		8CED83102BCD63FE005E4597 = {
 			isa = PBXGroup;
 			children = (
@@ -228,6 +318,7 @@
 				8CED831C2BCD63FE005E4597 /* BrainApp.swift */,
 				8CED831E2BCD63FE005E4597 /* ContentView.swift */,
 				8CED83202BCD63FF005E4597 /* Assets.xcassets */,
+				8C8159502C0609ED0087AF9C /* Resources */,
 				8CED83222BCD63FF005E4597 /* Brain.entitlements */,
 				8CED83232BCD63FF005E4597 /* Preview Content */,
 			);
@@ -276,10 +367,11 @@
 		8CED83502BCD64B1005E4597 /* TV */ = {
 			isa = PBXGroup;
 			children = (
-				8CFD056D2BDFDFB0004AC073 /* basic */,
+				8CFD056E2BDFDFC4004AC073 /* KarenWave.swift */,
 				8CED834D2BCD64B1005E4597 /* noisyBackground.metal */,
 				8CED834E2BCD64B1005E4597 /* TVExtras.swift */,
 				8CED834F2BCD64B1005E4597 /* TVView.swift */,
+				8C4EA8022BFBED4D00613E5C /* LoadingView.swift */,
 			);
 			path = TV;
 			sourceTree = "<group>";
@@ -292,10 +384,8 @@
 				8C05BB0D2BD5B52800AF602D /* controls */,
 				8CED83502BCD64B1005E4597 /* TV */,
 				8C05BB0C2BD5B4EB00AF602D /* settings */,
-				8C78F14C2BCD9F8500043CAF /* StatusView.swift */,
 				8CED83512BCD64B1005E4597 /* AsyncButton.swift */,
-				8CED83522BCD64B1005E4597 /* ChatRoledex.swift */,
-				8CED83532BCD64B1005E4597 /* SearchBar.swift */,
+				8CED83522BCD64B1005E4597 /* MessageBoardView.swift */,
 			);
 			path = topCard;
 			sourceTree = "<group>";
@@ -303,7 +393,6 @@
 		8CED83582BCD64B1005E4597 /* views */ = {
 			isa = PBXGroup;
 			children = (
-				8CFECC8D2BE6C5A100C3EA62 /* retro_assets */,
 				8CED834C2BCD64B1005E4597 /* neumorphic */,
 				8CED83552BCD64B1005E4597 /* topCard */,
 			);
@@ -313,7 +402,6 @@
 		8CED835F2BCD64B1005E4597 /* whisper */ = {
 			isa = PBXGroup;
 			children = (
-				8CED835D2BCD64B1005E4597 /* KarenVisualizer.swift */,
 				8CED835E2BCD64B1005E4597 /* WhisperRuntime.swift */,
 			);
 			path = whisper;
@@ -322,35 +410,11 @@
 		8CED83662BCD64B1005E4597 /* backend */ = {
 			isa = PBXGroup;
 			children = (
-				8CFD05672BDF2BF3004AC073 /* BERT */,
+				8CC782D02BEE8E9000C5C373 /* chat */,
 				8CED835F2BCD64B1005E4597 /* whisper */,
-				8CED83602BCD64B1005E4597 /* Chat.swift */,
-				8CED83612BCD64B1005E4597 /* ChatMessages.swift */,
-				8CED83622BCD64B1005E4597 /* ChatUtilities.swift */,
-				8CFECC8B2BE6AF5A00C3EA62 /* ChatViewModel.swift */,
-				8CED83632BCD64B1005E4597 /* ChatView.swift */,
-				8CED83642BCD64B1005E4597 /* ImageData.swift */,
+				8C819F102BF68665003C9B41 /* MessageBoard.swift */,
 			);
 			path = backend;
-			sourceTree = "<group>";
-		};
-		8CFD05672BDF2BF3004AC073 /* BERT */ = {
-			isa = PBXGroup;
-			children = (
-				8CFD05682BDF2C05004AC073 /* BertRuntime.swift */,
-			);
-			path = BERT;
-			sourceTree = "<group>";
-		};
-		8CFD056D2BDFDFB0004AC073 /* basic */ = {
-			isa = PBXGroup;
-			children = (
-				8CFD056E2BDFDFC4004AC073 /* KarenWave.swift */,
-				8C05BB122BD5BB4E00AF602D /* KarenView.swift */,
-				8C05BB0E2BD5B71100AF602D /* ViewRepresentable.swift */,
-				8C534ABF2BE1DDED00A812F4 /* AnimateableVector.swift */,
-			);
-			path = basic;
 			sourceTree = "<group>";
 		};
 		8CFECC8D2BE6C5A100C3EA62 /* retro_assets */ = {
@@ -364,15 +428,9 @@
 		8CFECC962BE6C5D400C3EA62 /* fonts */ = {
 			isa = PBXGroup;
 			children = (
+				8CE74B302BEEEF0F0041C2D3 /* digital_dream */,
+				8CE74B442BEEEF0F0041C2D3 /* futura */,
 				8CC782CE2BED328D00C5C373 /* zig.ttf */,
-				8C75EF5D2BE8530C00B7426F /* DIGITALDREAM.ttf */,
-				8C75EF642BE8530C00B7426F /* DIGITALDREAMFAT.ttf */,
-				8C75EF612BE8530C00B7426F /* DIGITALDREAMFATNARROW.ttf */,
-				8C75EF622BE8530C00B7426F /* DIGITALDREAMFATSKEW.ttf */,
-				8C75EF632BE8530C00B7426F /* DIGITALDREAMFATSKEWNARROW.ttf */,
-				8C75EF602BE8530C00B7426F /* DIGITALDREAMNARROW.ttf */,
-				8C75EF5E2BE8530C00B7426F /* DIGITALDREAMSKEW.ttf */,
-				8C75EF5F2BE8530C00B7426F /* DIGITALDREAMSKEWNARROW.ttf */,
 			);
 			path = fonts;
 			sourceTree = "<group>";
@@ -395,7 +453,6 @@
 			name = Brain;
 			packageProductDependencies = (
 				8CED837F2BCD64C8005E4597 /* WhisperKit */,
-				8CED83822BCD652E005E4597 /* SwiftSoup */,
 			);
 			productName = Brain;
 			productReference = 8CED83192BCD63FE005E4597 /* Brain.app */;
@@ -445,7 +502,7 @@
 			attributes = {
 				BuildIndependentTargetsInParallel = 1;
 				LastSwiftUpdateCheck = 1530;
-				LastUpgradeCheck = 1530;
+				LastUpgradeCheck = 1540;
 				TargetAttributes = {
 					8CED83182BCD63FE005E4597 = {
 						CreatedOnToolsVersion = 15.3;
@@ -471,7 +528,6 @@
 			mainGroup = 8CED83102BCD63FE005E4597;
 			packageReferences = (
 				8CED837E2BCD64C8005E4597 /* XCRemoteSwiftPackageReference "WhisperKit" */,
-				8CED83812BCD652E005E4597 /* XCRemoteSwiftPackageReference "SwiftSoup" */,
 			);
 			productRefGroup = 8CED831A2BCD63FE005E4597 /* Products */;
 			projectDirPath = "";
@@ -489,17 +545,26 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8CED83252BCD63FF005E4597 /* Preview Assets.xcassets in Resources */,
-				8C75EF672BE8530C00B7426F /* DIGITALDREAMSKEWNARROW.ttf in Resources */,
-				8C75EF6B2BE8530C00B7426F /* DIGITALDREAMFATSKEWNARROW.ttf in Resources */,
-				8C75EF682BE8530C00B7426F /* DIGITALDREAMNARROW.ttf in Resources */,
-				8C75EF662BE8530C00B7426F /* DIGITALDREAMSKEW.ttf in Resources */,
-				8CED83212BCD63FF005E4597 /* Assets.xcassets in Resources */,
-				8C75EF692BE8530C00B7426F /* DIGITALDREAMFATNARROW.ttf in Resources */,
-				8C75EF6C2BE8530C00B7426F /* DIGITALDREAMFAT.ttf in Resources */,
 				8CC782CF2BED328D00C5C373 /* zig.ttf in Resources */,
-				8C75EF652BE8530C00B7426F /* DIGITALDREAM.ttf in Resources */,
-				8C75EF6A2BE8530C00B7426F /* DIGITALDREAMFATSKEW.ttf in Resources */,
+				8CE74B452BEEEF0F0041C2D3 /* DigitalDream.ttf in Resources */,
+				8CE74B4B2BEEEF0F0041C2D3 /* DigitalDreamSkew.ttf in Resources */,
+				8C8159612C060A520087AF9C /* startup1.aif in Resources */,
+				8CE74B482BEEEF0F0041C2D3 /* DigitalDreamBoldSkew.ttf in Resources */,
+				8C81595D2C060A520087AF9C /* startup3.aif in Resources */,
+				8CE74B462BEEEF0F0041C2D3 /* DigitalDreamBold.ttf in Resources */,
+				8CE74B502BEEEF0F0041C2D3 /* Futura.ttf in Resources */,
+				8C81595A2C060A520087AF9C /* Hit 2.aif in Resources */,
+				8CE74B552BEEEF0F0041C2D3 /* FuturaLight.ttf in Resources */,
+				8CE74B512BEEEF0F0041C2D3 /* FuturaSkew.ttf in Resources */,
+				8CE74B572BEEEF0F0041C2D3 /* FuturaLightSkew.ttf in Resources */,
+				8CE74B532BEEEF0F0041C2D3 /* FuturaHeavy.ttf in Resources */,
+				8C81595B2C060A520087AF9C /* Hit 3.aif in Resources */,
+				8CE74B542BEEEF0F0041C2D3 /* FuturaHeavySkew.ttf in Resources */,
+				8C81595F2C060A520087AF9C /* startup2.aif in Resources */,
+				8C81595C2C060A520087AF9C /* Hit 1.aif in Resources */,
+				8CED83252BCD63FF005E4597 /* Preview Assets.xcassets in Resources */,
+				8CED83212BCD63FF005E4597 /* Assets.xcassets in Resources */,
+				8C8159602C060A520087AF9C /* startup0.aif in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -507,14 +572,21 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8C75EF762BE8544300B7426F /* DIGITALDREAMFATSKEWNARROW.ttf in Resources */,
-				8C75EF772BE8544300B7426F /* DIGITALDREAMFATNARROW.ttf in Resources */,
-				8C75EF782BE8544300B7426F /* DIGITALDREAMNARROW.ttf in Resources */,
-				8C75EF792BE8544300B7426F /* DIGITALDREAM.ttf in Resources */,
-				8C75EF7A2BE8544300B7426F /* DIGITALDREAMSKEW.ttf in Resources */,
-				8C75EF7B2BE8544300B7426F /* DIGITALDREAMFAT.ttf in Resources */,
-				8C75EF7C2BE8544300B7426F /* DIGITALDREAMSKEWNARROW.ttf in Resources */,
-				8C75EF7D2BE8544300B7426F /* DIGITALDREAMFATSKEW.ttf in Resources */,
+				8CE74B682BEEF3E10041C2D3 /* FuturaLight.ttf in Resources */,
+				8CE74B692BEEF3E10041C2D3 /* FuturaLightSkew.ttf in Resources */,
+				8CE74B6A2BEEF3E10041C2D3 /* FuturaHeavySkew.ttf in Resources */,
+				8CE74B6B2BEEF3E10041C2D3 /* zig.ttf in Resources */,
+				8CE74B6C2BEEF3E10041C2D3 /* FuturaHeavy.ttf in Resources */,
+				8CE74B6D2BEEF3E10041C2D3 /* FuturaSkew.ttf in Resources */,
+				8C57B73B2C0643EA008C7527 /* startup0.aif in Resources */,
+				8C57B73C2C0643EA008C7527 /* startup1.aif in Resources */,
+				8C57B73D2C0643EA008C7527 /* startup3.aif in Resources */,
+				8C57B73E2C0643EA008C7527 /* startup2.aif in Resources */,
+				8CE74B6E2BEEF3E10041C2D3 /* Futura.ttf in Resources */,
+				8CE74B662BEEF3DD0041C2D3 /* DigitalDream.ttf in Resources */,
+				8CE74B672BEEF3DD0041C2D3 /* DigitalDreamSkew.ttf in Resources */,
+				8CE74B622BEEF3D00041C2D3 /* DigitalDreamBoldSkew.ttf in Resources */,
+				8CE74B602BEEF3CD0041C2D3 /* DigitalDreamBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -522,14 +594,17 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8C75EF6E2BE8543F00B7426F /* DIGITALDREAM.ttf in Resources */,
-				8C75EF7E2BE8544300B7426F /* DIGITALDREAMFATSKEWNARROW.ttf in Resources */,
-				8C75EF7F2BE8544300B7426F /* DIGITALDREAMFATNARROW.ttf in Resources */,
-				8C75EF802BE8544300B7426F /* DIGITALDREAMNARROW.ttf in Resources */,
-				8C75EF812BE8544300B7426F /* DIGITALDREAMSKEW.ttf in Resources */,
-				8C75EF822BE8544300B7426F /* DIGITALDREAMFAT.ttf in Resources */,
-				8C75EF832BE8544300B7426F /* DIGITALDREAMSKEWNARROW.ttf in Resources */,
-				8C75EF842BE8544300B7426F /* DIGITALDREAMFATSKEW.ttf in Resources */,
+				8CE74B6F2BEEF3E10041C2D3 /* FuturaLight.ttf in Resources */,
+				8CE74B702BEEF3E10041C2D3 /* FuturaLightSkew.ttf in Resources */,
+				8CE74B712BEEF3E10041C2D3 /* FuturaHeavySkew.ttf in Resources */,
+				8CE74B722BEEF3E10041C2D3 /* zig.ttf in Resources */,
+				8CE74B732BEEF3E10041C2D3 /* FuturaHeavy.ttf in Resources */,
+				8CE74B742BEEF3E10041C2D3 /* FuturaSkew.ttf in Resources */,
+				8CE74B752BEEF3E10041C2D3 /* Futura.ttf in Resources */,
+				8CE74B642BEEF3DD0041C2D3 /* DigitalDream.ttf in Resources */,
+				8CE74B652BEEF3DD0041C2D3 /* DigitalDreamSkew.ttf in Resources */,
+				8CE74B632BEEF3D10041C2D3 /* DigitalDreamBoldSkew.ttf in Resources */,
+				8CE74B612BEEF3CE0041C2D3 /* DigitalDreamBold.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -540,16 +615,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				8CED83712BCD64B1005E4597 /* SearchBar.swift in Sources */,
+				8C819F0B2BF6402C003C9B41 /* ServerMessage.swift in Sources */,
+				8C819F0F2BF6432D003C9B41 /* ChatTestView.swift in Sources */,
 				8C05BB092BD308B400AF602D /* ToggleStyle.swift in Sources */,
-				8CED83792BCD64B1005E4597 /* ChatMessages.swift in Sources */,
 				8CED836F2BCD64B1005E4597 /* AsyncButton.swift in Sources */,
 				8CED83782BCD64B1005E4597 /* Chat.swift in Sources */,
 				8C78F1512BCEF11E00043CAF /* MicrophoneDialView.swift in Sources */,
-				8CED837B2BCD64B1005E4597 /* ChatView.swift in Sources */,
 				8CED836C2BCD64B1005E4597 /* noisyBackground.metal in Sources */,
 				8CED836D2BCD64B1005E4597 /* TVExtras.swift in Sources */,
 				8CED831F2BCD63FE005E4597 /* ContentView.swift in Sources */,
+				8CF17F932BF7B41C00215153 /* NWParametersWithPasskey.swift in Sources */,
 				8CFECC8C2BE6AF5A00C3EA62 /* ChatViewModel.swift in Sources */,
 				8CED83682BCD64B1005E4597 /* ButtonStyle.swift in Sources */,
 				8CED83852BCD6941005E4597 /* WhisperSettingsView.swift in Sources */,
@@ -557,26 +632,23 @@
 				8CED836A2BCD64B1005E4597 /* InverseMask+Clamp.swift in Sources */,
 				8CED83722BCD64B1005E4597 /* SheetView.swift in Sources */,
 				8CED83742BCD64B1005E4597 /* WhisperView.swift in Sources */,
-				8C78F14D2BCD9F8500043CAF /* StatusView.swift in Sources */,
-				8C534AC02BE1DDED00A812F4 /* AnimateableVector.swift in Sources */,
-				8CED83702BCD64B1005E4597 /* ChatRoledex.swift in Sources */,
+				8CED83702BCD64B1005E4597 /* MessageBoardView.swift in Sources */,
 				8C78F14B2BCD79E200043CAF /* SettingsView.swift in Sources */,
 				8CED83772BCD64B1005E4597 /* WhisperRuntime.swift in Sources */,
 				8CFD056B2BDF2C81004AC073 /* MicrophoneIndicatorView.swift in Sources */,
 				8CED837A2BCD64B1005E4597 /* ChatUtilities.swift in Sources */,
-				8CFD05692BDF2C05004AC073 /* BertRuntime.swift in Sources */,
+				8C819F0D2BF6404C003C9B41 /* ClientCommands.swift in Sources */,
 				8CED83692BCD64B1005E4597 /* InnerShadow.swift in Sources */,
-				8C05BB132BD5BB4E00AF602D /* KarenView.swift in Sources */,
 				8CED831D2BCD63FE005E4597 /* BrainApp.swift in Sources */,
 				8C05BB0B2BD594D600AF602D /* MicrophoneButtonView.swift in Sources */,
 				8CED836B2BCD64B1005E4597 /* OuterShadow.swift in Sources */,
 				8C565C522BEBBD8700F0718C /* ScaleButtonStyle.swift in Sources */,
 				8CFD056F2BDFDFC4004AC073 /* KarenWave.swift in Sources */,
-				8CED83762BCD64B1005E4597 /* KarenVisualizer.swift in Sources */,
 				8C77A1C32BE9DB5D002D6045 /* ControlsView.swift in Sources */,
+				8C819F072BF63FF2003C9B41 /* ChatEntry.swift in Sources */,
+				8C819F112BF68665003C9B41 /* MessageBoard.swift in Sources */,
+				8C4EA8032BFBED4D00613E5C /* LoadingView.swift in Sources */,
 				8CED83672BCD64B1005E4597 /* Borders.swift in Sources */,
-				8CED837C2BCD64B1005E4597 /* ImageData.swift in Sources */,
-				8C05BB0F2BD5B71100AF602D /* ViewRepresentable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -647,6 +719,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
@@ -665,9 +738,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.4;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -710,6 +783,7 @@
 				CLANG_WARN_UNREACHABLE_CODE = YES;
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				COPY_PHASE_STRIP = NO;
+				DEAD_CODE_STRIPPING = YES;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
@@ -722,9 +796,9 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.5;
 				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
-				MACOSX_DEPLOYMENT_TARGET = 14.4;
+				MACOSX_DEPLOYMENT_TARGET = 14.5;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SWIFT_COMPILATION_MODE = wholemodule;
@@ -739,6 +813,7 @@
 				CODE_SIGN_ENTITLEMENTS = Brain/Brain.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Brain/Preview Content\"";
 				DEVELOPMENT_TEAM = 83LSSRHW46;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -783,6 +858,7 @@
 				CODE_SIGN_ENTITLEMENTS = Brain/Brain.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"Brain/Preview Content\"";
 				DEVELOPMENT_TEAM = 83LSSRHW46;
 				ENABLE_HARDENED_RUNTIME = YES;
@@ -826,6 +902,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 83LSSRHW46;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
@@ -849,6 +926,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 83LSSRHW46;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
@@ -871,6 +949,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 83LSSRHW46;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
@@ -893,6 +972,7 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEAD_CODE_STRIPPING = YES;
 				DEVELOPMENT_TEAM = 83LSSRHW46;
 				GENERATE_INFOPLIST_FILE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.4;
@@ -955,16 +1035,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/argmaxinc/WhisperKit.git";
 			requirement = {
-				branch = main;
-				kind = branch;
-			};
-		};
-		8CED83812BCD652E005E4597 /* XCRemoteSwiftPackageReference "SwiftSoup" */ = {
-			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/scinfu/SwiftSoup.git";
-			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 2.7.2;
+				kind = exactVersion;
+				version = 0.7.2;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -974,11 +1046,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8CED837E2BCD64C8005E4597 /* XCRemoteSwiftPackageReference "WhisperKit" */;
 			productName = WhisperKit;
-		};
-		8CED83822BCD652E005E4597 /* SwiftSoup */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8CED83812BCD652E005E4597 /* XCRemoteSwiftPackageReference "SwiftSoup" */;
-			productName = SwiftSoup;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

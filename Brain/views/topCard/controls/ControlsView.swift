@@ -7,14 +7,6 @@
 
 import SwiftUI
 
-extension InsettableShape {
-    func chamferedEdgeFill(fill : Color, insetAmount : CGFloat) -> some View {
-        
-        self
-            .fill(fill)
-    }
-}
-
 struct ControlsView: View {
     
     let smallerCornerRadius : CGFloat = 5
@@ -22,10 +14,23 @@ struct ControlsView: View {
     
     var isOpen : Bool
     
-    @Environment(ChatViewModel.self) private var chatViewModel
+    @Binding var showWave : Bool
+    
+    @Environment(MessageBoard.self) private var messageBoard
+    
     @Environment(Whisper.self) private var whisper
+    @Environment(ChatViewModel.self) private var chatViewModel
+
     
     private var cornerRadius : CGFloat { self.isOpen ? 32 : 18 }
+
+    enum ControlsViewMessages : String {
+        case mustLoadModel = "must load model before usage"
+        case sensitivityIs = "sensitivity is "
+        case startedRecording = "recording started"
+        case endedRecording = "recording ended"
+        case newConversation = "new conversation"
+    }
     
     var iconCircle : some View {
         Circle()
@@ -40,7 +45,7 @@ struct ControlsView: View {
     var button0 : some View {
         Button {
             withAnimation {
-                self.chatViewModel.showWave.toggle()
+                self.showWave.toggle()
             }
         } label: {
             ZStack {
@@ -55,12 +60,12 @@ struct ControlsView: View {
                                              endPoint: .bottomTrailing), lineWidth: 1)
                 self.iconCircle
                 
-                let icon = self.chatViewModel.showWave ? "bubble.left.and.bubble.right.fill" : "waveform.path.ecg.rectangle.fill"
+                let icon = self.showWave ? "bubble.left.and.bubble.right.fill" : "waveform.path.ecg.rectangle.fill"
                 
                 Image(systemName: icon)
                     .foregroundStyle(.lightShadow)
                     .imageScale(self.isOpen ? .medium : .small)
-                    .symbolEffect(.bounce, value: self.chatViewModel.showWave)
+                    .symbolEffect(.bounce, value: self.showWave)
                     //.contentTransition()
                     
             }
@@ -70,9 +75,19 @@ struct ControlsView: View {
     
     var button1 : some View {
         Button {
-
+            if self.whisper.modelState != .loaded {
+                self.messageBoard.postTemporaryMessage(Self.ControlsViewMessages.mustLoadModel.rawValue)
+            } else {
+                if self.whisper.isRecording {
+                    self.messageBoard.postTemporaryMessage(Self.ControlsViewMessages.endedRecording.rawValue)
+                } else {
+                    self.messageBoard.postTemporaryMessage(Self.ControlsViewMessages.startedRecording.rawValue)
+                }
+                self.whisper.toggleRecording(shouldLoop: true)
+            }
         } label: {
             ZStack {
+                
                 UnevenRoundedRectangle(cornerRadii: .init(topLeading: self.smallerCornerRadius,
                                                           bottomLeading: self.smallerCornerRadius,
                                                           bottomTrailing: self.smallerCornerRadius,
@@ -82,8 +97,25 @@ struct ControlsView: View {
                 .strokeBorder(LinearGradient(colors: [.edgeLightShadow, .edgeDarkShadow],
                                              startPoint: .topLeading,
                                              endPoint: .bottomTrailing), lineWidth: 1)
-                self.iconCircle
                 
+                self.iconCircle
+                /*
+                Circle()
+                    .inset(by: 5)
+                    .fill(
+                        LinearGradient(colors: [.cyan, .blue],
+                                       startPoint: .init(x: 0, y: 0),
+                                       endPoint: .init(x: 1, y: 1))
+                    )
+                
+                Circle()
+                    .inset(by: 12)
+                    .fill(
+                        LinearGradient(colors: [.cyan, .blue].reversed(),
+                                       startPoint: .init(x: 0, y: 0),
+                                       endPoint: .init(x: 1.0, y: 1.0))
+                    )
+                */
                 Image(systemName: "recordingtape.circle.fill")
                     .foregroundStyle(.darkShadow)
                     .imageScale(self.isOpen ? .medium : .small)
@@ -96,8 +128,9 @@ struct ControlsView: View {
     var button2 : some View {
         Button {
             if self.whisper.appSettings.silenceThreshold < 1.0 {
-                self.whisper.appSettings.silenceThreshold += 0.1
+                self.whisper.appSettings.silenceThreshold = round((self.whisper.appSettings.silenceThreshold * 10) + 1) / 10
             }
+            self.messageBoard.postTemporaryMessage(ControlsViewMessages.sensitivityIs.rawValue + String(self.whisper.appSettings.silenceThreshold))
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: self.smallerCornerRadius, style: .continuous)
@@ -116,7 +149,7 @@ struct ControlsView: View {
     
     var button3 : some View {
         Button {
-            
+            self.messageBoard.postTemporaryMessage(Self.ControlsViewMessages.newConversation.rawValue)
         } label: {
             ZStack {
                 RoundedRectangle(cornerRadius: self.smallerCornerRadius, style: .continuous)
@@ -137,8 +170,9 @@ struct ControlsView: View {
     var button4 : some View {
         Button {
             if self.whisper.appSettings.silenceThreshold > 0.0 {
-                self.whisper.appSettings.silenceThreshold -= 0.1
+                self.whisper.appSettings.silenceThreshold = round((self.whisper.appSettings.silenceThreshold * 10) - 1) / 10
             }
+            self.messageBoard.postTemporaryMessage(ControlsViewMessages.sensitivityIs.rawValue + String(self.whisper.appSettings.silenceThreshold))
         } label: {
             ZStack {
                 UnevenRoundedRectangle(cornerRadii: .init(topLeading: self.smallerCornerRadius,
@@ -231,17 +265,27 @@ struct ControlsView: View {
 
 fileprivate struct TestView : View {
     
-    @State var chatViewModel : ChatViewModel = .init(messageText: "hello")
-    static let whisper : Whisper = .init()
+    @State var whisper : Whisper
+    @State var chatViewModel : ChatViewModel
+    @State var messageBoard : MessageBoard
+    @State var showWave : Bool = false
+    
+    init() {
+        let messageBoard = MessageBoard()
+        self.whisper = .init(messageBoard: messageBoard)
+        self.chatViewModel = .init(username: ServerConstants.username, serverAddress: ServerConstants.serverAddress, serverPort: ServerConstants.serverPort, messageBoard: messageBoard)
+        self.messageBoard = messageBoard
+    }
     
     var body: some View {
         ZStack {
             Color.mainAccent.ignoresSafeArea()
-            ControlsView(isOpen: true)
+            ControlsView(isOpen: true, showWave: self.$showWave)
                 .frame(width: 150)
         }
         .environment(self.chatViewModel)
-        .environment(Self.whisper)
+        .environment(self.whisper)
+        .environment(self.messageBoard)
     }
 }
 #Preview {

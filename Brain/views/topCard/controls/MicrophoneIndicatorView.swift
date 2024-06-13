@@ -14,9 +14,9 @@ fileprivate struct BarColor : Identifiable {
 
 struct MicrophoneIndicatorView : View {
     
-    public var energyLevel : Float
-    public var threshold : Double
-    public var isActive : Bool
+    public let energyLevel : Float
+    public let threshold : Double
+    public let isActive : Bool
     public let maxNumBars : Int = 16
     
     private var barColor : Color { self.energyLevel > Float(self.threshold) ? Color.green : Color.red }

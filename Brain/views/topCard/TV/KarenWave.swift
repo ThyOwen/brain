@@ -10,22 +10,20 @@ import simd
 
 public struct KarenWave: Shape {
     
-    var fftSamples : ContiguousArray<Float>
-    var volume : Float
+    let fftMagnitudes : ContiguousArray<Float>
+    let volume : Float
     
-    let indices : [Int]
+    static let indices : [Int] = Self.fanoutReorder(length: Whisper.fftOutResolution)
+    
+    init(fftMagnitudes : consuming ContiguousArray<Float>, volume : consuming Float) {
+        self.fftMagnitudes = fftMagnitudes
 
-    
-    init(fftSamples: ContiguousArray<Float>, volume : Float) {
-        self.fftSamples = fftSamples
         self.volume = volume
-        self.indices = Self.fanoutReorder(length: fftSamples.count)
     }
     
     public func path(in rect: CGRect) -> Path {
         
-        let baseLine = rect.midY
-        let numSamples = self.fftSamples.count
+        let numSamples = self.fftMagnitudes.count
         
         let xControlPointDelta = Float(rect.width) / (2 * Float(numSamples))
         
@@ -33,7 +31,7 @@ public struct KarenWave: Shape {
         let (xValues, xValuesPositiveOffset, xValuesNegativeOffset) = Self.generateXs(width: Float(rect.width), numSamples: numSamples, xOffset: xControlPointDelta)
             
             
-        let yValues = Self.normalizeAndScaleSamples(fftSamples: self.fftSamples,
+        let yValues = Self.normalizeAndScaleSamples(fftMagnitudes: self.fftMagnitudes,
                                                         volume: self.volume,
                                                         heightLimit: Float(rect.midY))
     
@@ -41,13 +39,13 @@ public struct KarenWave: Shape {
         
         path.move(to: .init(x: 0, y: rect.height / 2))
         
-        let startIdx = self.indices[0]
+        let startIdx = Self.indices[0]
         
         let startPoint : CGPoint = .init(x: CGFloat(xValues[0]),
                                          y: CGFloat(yValues[startIdx]))
         
         let startFormerControlPoint : CGPoint = .init(x: CGFloat(xControlPointDelta),
-                                                      y: baseLine)
+                                                      y: rect.midY)
         
         let startLatterControlPoint : CGPoint = .init(x: CGFloat(xValuesNegativeOffset[0]),
                                                       y: CGFloat(yValues[startIdx]))
@@ -57,8 +55,8 @@ public struct KarenWave: Shape {
                       control2: startLatterControlPoint)
         
         for idx in stride(from: 1, to: numSamples, by: 1) {
-            let reorderIdx = self.indices[idx]
-            let lastReorderIdx = self.indices[idx - 1]
+            let reorderIdx = Self.indices[idx]
+            let lastReorderIdx = Self.indices[idx - 1]
             
             let point : CGPoint = .init(x: CGFloat(xValues[idx]), 
                                         y: CGFloat(yValues[reorderIdx]))
@@ -72,16 +70,16 @@ public struct KarenWave: Shape {
                           control2: latterControlPoint)
         }
         
-        let endIdx = self.indices[self.indices.count - 1]
+        let endIdx = Self.indices[Whisper.fftOutResolution - 1]
         
         let endPoint : CGPoint = .init(x: rect.width,
-                                         y: baseLine)
+                                         y: rect.midY)
         
         let endFormerControlPoint : CGPoint = .init(x: CGFloat(xValuesPositiveOffset[xValuesPositiveOffset.scalarCount - 1]),
                                                       y: CGFloat(yValues[endIdx]))
         
         let endLatterControlPoint : CGPoint = .init(x: rect.maxX - CGFloat(xControlPointDelta),
-                                                      y: baseLine)
+                                                      y: rect.midY)
         
 
         
@@ -92,7 +90,7 @@ public struct KarenWave: Shape {
         return path
     }
     
-    static func fanoutReorder(length : Int) -> [Int] {
+    static func fanoutReorder(length : borrowing Int) -> [Int] {
         let evenArray = stride(from: 0, to: length, by: 2).map { $0 }
         var oddArray = stride(from: length - 1, through: 1, by: -2).map { $0}
         
@@ -100,13 +98,14 @@ public struct KarenWave: Shape {
         return oddArray
     }
     
-    static func normalizeAndScaleSamples( fftSamples : ContiguousArray<Float>, volume : Float, heightLimit : Float, padding : Float = 10) -> ContiguousArray<Float> {
-        
-        var fftSamples = fftSamples
+    private static func normalizeAndScaleSamples( fftMagnitudes : consuming ContiguousArray<Float>,
+                                                  volume : consuming Float,
+                                                  heightLimit : Float,
+                                                  padding : Float = 10) -> ContiguousArray<Float> {
         
         let paddedHeightLimit = heightLimit - padding
         
-        fftSamples.withContiguousMutableStorageIfAvailable { fftBufferPointer in
+        fftMagnitudes.withContiguousMutableStorageIfAvailable { fftBufferPointer in
             fftBufferPointer.baseAddress!.withMemoryRebound(to: SIMD32<Float>.self, capacity: 1) { buffer in
                 
                 let maxSample = buffer.pointee.max()
@@ -122,10 +121,10 @@ public struct KarenWave: Shape {
             }
         }
         
-        return fftSamples
+        return fftMagnitudes
     }
     
-    static func generateXs(width : Float, numSamples : Int, xOffset : Float) -> (xValues: SIMD32<Float>,
+    private static func generateXs(width : Float, numSamples : Int, xOffset : Float) -> (xValues: SIMD32<Float>,
                                                                                  xValuesPosOffset: SIMD32<Float>,
                                                                                  xValuesNegOffset: SIMD32<Float>) {
         var xValues = SIMD32<Float>(stride(from: 1, through: 32, by: 1))
@@ -140,13 +139,22 @@ public struct KarenWave: Shape {
     }
 }
 
-#Preview {
-    ZStack {
-        Color.mainAccent.ignoresSafeArea()
-        
-        KarenWave(fftSamples: ContiguousArray<Float>(repeating: Float.random(in: 0...4.0),count: 32), volume: 0.5)
-            .stroke(.green.gradient, style: StrokeStyle(lineWidth: 3.0, lineCap: .round))
+fileprivate struct TestView : View {
+    
+    @State var fftMagnitudes : ContiguousArray<Float> = .init(repeating: Float.random(in: 0...4.0),count: 32)
+    
+    var body: some View {
+        ZStack {
+            Color.mainAccent.ignoresSafeArea()
+            
+            KarenWave(fftMagnitudes: self.fftMagnitudes, volume: 0.5)
+                .stroke(.green.gradient, style: StrokeStyle(lineWidth: 3.0, lineCap: .round))
+        }
     }
+}
+
+#Preview {
+    TestView()
     
 }
 

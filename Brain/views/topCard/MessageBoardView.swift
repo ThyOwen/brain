@@ -16,53 +16,52 @@ extension View {
     }
 }
 
-
-
-struct ChatRoledex: View {
+struct MessageBoardView: View {
     
     let fontSize : CGFloat
-    
-    @Environment(ChatViewModel.self) private var chatViewModel
+
+    @Environment(MessageBoard.self) private var messageBoard
     
     var body: some View {
         ZStack(alignment: .leading) {
             
-            Text(String(repeating: "@", count: self.chatViewModel.characterLimit))
-                .font(.custom("DigitalDream", size: self.fontSize))
+            Text(String(repeating: "@", count: MessageBoard.characterLimit))
+                .font(.custom("DigitalDreamSkew", size: self.fontSize))
                 .foregroundColor(.init(white: 0.1, opacity: 0.5))
             
             ZStack(alignment: .leading) {
-                Text(self.chatViewModel.subText)
-                    .font(.custom("DigitalDreamFat", size: self.fontSize))
+                Text(self.messageBoard.boardText)
+                    .font(.custom("DigitalDreamBoldSkew", size: self.fontSize))
                     .foregroundColor(.init(hue: 0.55, saturation: 0.8, brightness: 0.9))
-                Text(self.chatViewModel.subText)
-                    .font(.custom("DigitalDream", size: self.fontSize))
+                Text(self.messageBoard.boardText)
+                    .font(.custom("DigitalDreamSkew", size: self.fontSize))
                     .foregroundColor(.white)
             }
-            .blur(radius: 0.7, opaque: false)
+            .blur(radius: 0.25, opaque: false)
             
             .mask {
-                Text(self.chatViewModel.subText)
-                    .font(.custom("DigitalDream", size: self.fontSize))
+                Text(self.messageBoard.boardText)
+                    .font(.custom("DigitalDreamSkew", size: self.fontSize))
             }
             .addGlowEffect(0.2)
         }
         //.animation(.linear(duration: 1.0).repeatForever(autoreverses: false), value: self.textIdx)
+
     }
     
 }
 
 fileprivate struct TestView : View {
     
-    @State var chatViewModel : ChatViewModel = .init(messageText: "Ohio will invade the world")
+    @State var messageBoard : MessageBoard = .init()
     
     var body: some View {
         ZStack {
             Color.black.ignoresSafeArea()
-            ChatRoledex(fontSize: 24)
+            MessageBoardView(fontSize: 14)
                 .frame(maxWidth: 300, minHeight: 30, maxHeight: 35)
         }
-        .environment(self.chatViewModel)
+        .environment(self.messageBoard)
     }
 }
 

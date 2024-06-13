@@ -1,5 +1,5 @@
 {
-  "originHash" : "520caa2e17d9eb80024a0de3e811b91acd6bb469985822087fb68fa7c742ca8a",
+  "originHash" : "be2b508cf91e00ccfdfd83e8177b94c9aee963c0dbf9b604f03fa19a3d85c0d4",
   "pins" : [
     {
       "identity" : "swift-argument-parser",
@@ -20,21 +20,12 @@
       }
     },
     {
-      "identity" : "swiftsoup",
-      "kind" : "remoteSourceControl",
-      "location" : "https://github.com/scinfu/SwiftSoup.git",
-      "state" : {
-        "revision" : "028487d4a8a291b2fe1b4392b5425b6172056148",
-        "version" : "2.7.2"
-      }
-    },
-    {
       "identity" : "whisperkit",
       "kind" : "remoteSourceControl",
       "location" : "https://github.com/argmaxinc/WhisperKit.git",
       "state" : {
-        "branch" : "main",
-        "revision" : "d41566ac725d12a9e8c020731aa3a10b6d241729"
+        "revision" : "aa4bb901c8a09c8b5320ff4bb9fe64a095614d4e",
+        "version" : "0.7.2"
       }
     }
   ],

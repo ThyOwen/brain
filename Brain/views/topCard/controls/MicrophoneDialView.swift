@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-
+/*
 public struct Arc: InsettableShape {
     
     var startDegrees : Double
@@ -102,7 +102,6 @@ struct MicrophoneDialView: View {
         
         self._whisper = whisper
         self.tempSensitivity = whisper.appSettings.silenceThreshold.wrappedValue
-        self.messageTimeOut = Double(whisper.countdownValue.wrappedValue)
         
         self.numVolNotches = numVolNotches
         self.angleVolNotches = (0...numVolNotches).map { idx in
@@ -156,11 +155,7 @@ struct MicrophoneDialView: View {
 
         }
         .onChange(of: self.bufferMeetsSilenceThreshold) { oldValue, newValue in
-            if !newValue {
-                self.whisper.startCountdown()
-            } else {
-                self.whisper.resetCountdown()
-            }
+
         }
         .onChange(of: self.whisper.countdownValue) { oldValue, newValue in
             withAnimation(.easeInOut(duration: 5.0)) {
@@ -260,3 +255,4 @@ fileprivate struct TestView : View {
         }.frame(width: 100)
     }
 }
+*/

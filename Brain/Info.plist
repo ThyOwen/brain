@@ -4,15 +4,17 @@
 <dict>
 	<key>UIAppFonts</key>
 	<array>
-		<string>DIGITALDREAM.ttf</string>
-		<string>DIGITALDREAMNARROW.ttf</string>
-		<string>DIGITALDREAMSKEW.ttf</string>
-		<string>DIGITALDREAMSKEWNARROW.ttf</string>
-		<string>DIGITALDREAMFAT.ttf</string>
-		<string>DIGITALDREAMFATNARROW.ttf</string>
-		<string>DIGITALDREAMFATSKEW.ttf</string>
-		<string>DIGITALDREAMFATSKEWNARROW.ttf</string>
 		<string>zig.ttf</string>
+		<string>DigitalDream.ttf</string>
+		<string>DigitalDreamSkew.ttf</string>
+		<string>DigitalDreamBold.ttf</string>
+		<string>DigitalDreamBoldSkew.ttf</string>
+		<string>Futura.ttf</string>
+		<string>FuturaSkew.ttf</string>
+		<string>FuturaHeavy.ttf</string>
+		<string>FuturaHeavySkew.ttf</string>
+		<string>FuturaLight.ttf</string>
+		<string>FuturaLightSkew.ttf</string>
 	</array>
 </dict>
 </plist>

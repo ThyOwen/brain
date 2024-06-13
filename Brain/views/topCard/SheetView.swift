@@ -107,7 +107,7 @@ struct SheetView<Content: View>: View {
                 
                 let clippedHeight = Self.clamp(value.translation.height, in: self.translationBounds)
                 
-                print(value.translation.height)
+                //print(value.translation.height)
                 
                 state = .active(translationHeight: clippedHeight)
             }

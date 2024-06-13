@@ -10,14 +10,31 @@ import SwiftUI
 @main
 struct brainApp: App {
     
-    @State private var whisper : Whisper = .init()
-    @State private var chatViewModel : ChatViewModel = .init(messageText: "load model to start usage")
+    @State var chatViewModel : ChatViewModel
+    @State var whisper : Whisper
+    @State var messageBoard : MessageBoard
+    
+    init() {
+        let messageBoard = MessageBoard()
+        self.whisper = .init(messageBoard: messageBoard)
+        self.chatViewModel = .init(username: "me", serverAddress: ServerConstants.serverAddress, serverPort: ServerConstants.serverPort, messageBoard: messageBoard)
+        self.messageBoard = messageBoard
+    }
     
     var body: some Scene {
         WindowGroup {
+            
             ContentView()
-                .environment(self.chatViewModel)
                 .environment(self.whisper)
+                .environment(self.messageBoard)
+                .environment(self.chatViewModel)
+            
+            /*
+            ChatTestView()
+                .environment(self.messageBoard)
+                .environment(self.chatViewModel)
+             */
+             
         }
     }
 }

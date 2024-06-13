@@ -7,7 +7,7 @@
 
 import SwiftUI
 import WhisperKit
-
+/*
 struct InfoButton: View {
     var infoText: String
     @State private var showInfo = false
@@ -173,37 +173,6 @@ struct WhisperSettingsView: View {
                     })
                     .buttonStyle(BorderlessButtonStyle())
                 }
-
-                if self.whisper.modelState == .unloaded {
-                    Divider()
-                    Button {
-                        self.whisper.resetState()
-                        self.whisper.loadModel(self.whisper.appSettings.selectedModel)
-                        self.whisper.modelState = .loading
-                    } label: {
-                        Text("Load Model")
-                            .frame(maxWidth: .infinity)
-                            .frame(height: 40)
-                    }
-                    .buttonStyle(.borderedProminent)
-                } else if self.whisper.loadingProgressValue < 1.0 {
-                    VStack {
-                        HStack {
-                            ProgressView(value: self.whisper.loadingProgressValue, total: 1.0)
-                                .progressViewStyle(LinearProgressViewStyle())
-                                .frame(maxWidth: .infinity)
-
-                            Text(String(format: "%.1f%%", self.whisper.loadingProgressValue * 100))
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                        }
-                        if self.whisper.modelState == .prewarming {
-                            Text("Specializing \(self.whisper.appSettings.selectedModel) for your device...\nThis can take several minutes on first load")
-                                .font(.caption)
-                                .foregroundColor(.gray)
-                        }
-                    }
-                }
             }
         }
     
@@ -211,5 +180,6 @@ struct WhisperSettingsView: View {
 }
 
 #Preview {
-    WhisperSettingsView(whisper: .constant(Whisper()))
+    WhisperSettingsView()
 }
+*/

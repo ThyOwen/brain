@@ -32,8 +32,6 @@ struct TVView: View {
             TV(insetAmount: 10)
                 .fill(.black)
             
-            TV(insetAmount: 11)
-                .colorEffect(ShaderLibrary.coloredNoise())
             /*
             VStack(spacing: 0) {
                 Spacer()
@@ -64,7 +62,7 @@ struct TVView: View {
 
 fileprivate struct TestView : View {
     
-    @State private var chatViewModel : ChatViewModel = .init(messageText: "Ohio will invade the world")
+    //@State private var chatViewModel : ChatViewModel = .init()
     @State private var isPanel : Bool = true
     
     var body: some View {
@@ -80,7 +78,7 @@ fileprivate struct TestView : View {
                     .aspectRatio(1.2, contentMode: .fit)
                     .scenePadding()
             }
-            .environment(self.chatViewModel)
+            //.environment(self.chatViewModel)
         }
     }
 }

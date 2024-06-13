@@ -50,14 +50,14 @@ half4 sigmoid(half4 pixel, float offest) {
 /// - Parameter color: The current color of the pixel.
 /// - Parameter time: The number of elapsed seconds since the shader was created
 /// - Returns: The new pixel color.
-[[ stitchable ]] half4 coloredNoise(float2 position, half4 color) {
+[[ stitchable ]] half4 coloredNoise(float2 position, half4 color, float strength) {
     // If it's not transparent…
     if (color.a > 0.0h) {
         // Make a color where the RGB values are the same
         // random number and A is 1; multiply by the
         // original alpha to get smooth edges.
         
-        float offset = (0.4 * whiteRandom(1.0, position));
+        float offset = (strength * whiteRandom(1.0, position));
         
         half4 output = sigmoid(color, offset);
         

@@ -8,14 +8,39 @@
 import Foundation
 import Observation
 import Accelerate
-import AVFoundation
+
+import CoreML
 import WhisperKit
 
-public enum WhisperError : Error {
-    case microphoneUnavailable
+import struct SwiftUI.AppStorage
+
+public struct WhisperSettings {
+    @AppStorage("selectedAudioInput") public var selectedAudioInput: String = "No Audio Input"
+    @AppStorage("selectedModel") public var selectedModel: String = "distil-large-v3_turbo_600MB"
+    @AppStorage("selectedTab") public var selectedTab: String = "Transcribe"
+    @AppStorage("selectedTask") public var selectedTask: String = "transcribe"
+    @AppStorage("selectedLanguage") public var selectedLanguage: String = "english"
+    @AppStorage("repoName") public var repoName: String = "argmaxinc/whisperkit-coreml"
+    @AppStorage("enableTimestamps") public var enableTimestamps: Bool = true
+    @AppStorage("enablePromptPrefill") public var enablePromptPrefill: Bool = true
+    @AppStorage("enableCachePrefill") public var enableCachePrefill: Bool = true
+    @AppStorage("enableSpecialCharacters") public var enableSpecialCharacters: Bool = false
+    @AppStorage("enableEagerDecoding") public var enableEagerDecoding: Bool = false
+    @AppStorage("enableDecoderPreview") public var enableDecoderPreview: Bool = true
+    @AppStorage("temperatureStart") public var temperatureStart: Double = 0
+    @AppStorage("fallbackCount") public var fallbackCount: Double = 5
+    @AppStorage("compressionCheckWindow") public var compressionCheckWindow: Double = 20
+    @AppStorage("sampleLength") public var sampleLength: Double = 224
+    @AppStorage("silenceThreshold") public var silenceThreshold: Double = 0.3
+    @AppStorage("useVAD") public var useVAD: Bool = true
+    @AppStorage("tokenConfirmationsNeeded") public var tokenConfirmationsNeeded: Double = 2
+    @AppStorage("autoSendDelay") public var numBufferBeforeSend : Int = 2
+    @AppStorage("chunkingStrategy") public var chunkingStrategy: ChunkingStrategy = .none
+    @AppStorage("encoderComputeUnits") public var encoderComputeUnits: MLComputeUnits = .cpuAndNeuralEngine
+    @AppStorage("decoderComputeUnits") public var decoderComputeUnits: MLComputeUnits = .cpuAndNeuralEngine
 }
 
-@Observable public class Whisper {
+@Observable public final class Whisper {
     public var whisperKit: WhisperKit? = nil
     #if os(macOS)
     public var audioDevices: [AudioDevice]? = nil
@@ -23,6 +48,7 @@ public enum WhisperError : Error {
     public var isRecording: Bool = false
     public var isTranscribing: Bool = false
     public var currentText: String = ""
+    public var currentChunks: [Int: (chunkText: [String], fallbacks: Int)] = [:]
     public let modelStorage: String = "huggingface/models/argmaxinc/whisperkit-coreml"
 
     // MARK: Model management
@@ -42,6 +68,7 @@ public enum WhisperError : Error {
     public var firstTokenTime: TimeInterval = 0
     public var pipelineStart: TimeInterval = 0
     public var effectiveRealTimeFactor: TimeInterval = 0
+    public var effectiveSpeedFactor: TimeInterval = 0
     public var totalInferenceTime: TimeInterval = 0
     public var tokensPerSecond: TimeInterval = 0
     public var currentLag: TimeInterval = 0
@@ -57,13 +84,7 @@ public enum WhisperError : Error {
     public var unconfirmedSegments: [TranscriptionSegment] = []
     public var unconfirmedText: [String] = []
     
-    public var combined : [String] {
-        var confirmed = self.confirmedSegments.map { $0.text.trimmingCharacters(in: .whitespacesAndNewlines) }
-        let unconfirmed = self.unconfirmedSegments.map { $0.text.trimmingCharacters(in: .whitespacesAndNewlines) }
-        confirmed.append(contentsOf: unconfirmed)
-        return confirmed
-        
-    }
+    public var isStreamMode : Bool = true
 
     public var appSettings : WhisperSettings = .init()
     // MARK: Eager mode properties
@@ -84,31 +105,42 @@ public enum WhisperError : Error {
     // MARK: - Logic
     
     private var transcriptionTask: Task<Void, Never>? = nil
+    private var transcribeFileTask: Task<Void, Never>? = nil
     private var visualizeTask: Task<Void, Never>? = nil
     
-    @ObservationIgnored public let fftInResolution : Int = 64
-    @ObservationIgnored public let fftOutResolution : Int = 32
-    @ObservationIgnored private let fftSetup : vDSP_DFT_Setup = vDSP_DFT_zop_CreateSetup(nil, UInt(64), vDSP_DFT_Direction.FORWARD)!
-    public var fftMagnitudes : ContiguousArray<Float> = .init(repeating: 0.0001, count: 32)
+    public static let fftInResolution : Int = 64
+    public static let fftOutResolution : Int = 32
+    public static let fftSetup : vDSP_DFT_Setup = vDSP_DFT_zop_CreateSetup(nil, UInt(64), vDSP_DFT_Direction.FORWARD)!
+    public var fftMagnitudes : ContiguousArray<Float> = .init(repeating: 0.001, count: 32)
+    
+    public static let zerosBuffer : ContiguousArray<Float> = .init(repeating: 0.0, count: 64)
     
     // MARK: - Countdown
     
-    public var countdownValue : Int = 0
-    public var countdownDelay : Int = 0
-    public let countdownValueLimit : Int = 3//sec
-    public let countdownDelayLimit : Int = 1//sec
-    public var timer : Timer? = nil
+    public var numBuffersMeetThreshold : Int = 0
     
-    func resetState() {
+    private var messageBoard : MessageBoard
+    
+    public init(messageBoard : MessageBoard) {
+        self.messageBoard = messageBoard
+    }
+    
+    private func getComputeOptions() -> ModelComputeOptions {
+        return ModelComputeOptions(audioEncoderCompute: self.appSettings.encoderComputeUnits, textDecoderCompute: self.appSettings.decoderComputeUnits)
+    }
+    
+    public func resetState() {
+        transcribeFileTask?.cancel()
         isRecording = false
         isTranscribing = false
         whisperKit?.audioProcessor.stopRecording()
         currentText = ""
-        unconfirmedText = []
+        currentChunks = [:]
 
-        firstTokenTime = 0
-        pipelineStart = 0
+        pipelineStart = Double.greatestFiniteMagnitude
+        firstTokenTime = Double.greatestFiniteMagnitude
         effectiveRealTimeFactor = 0
+        effectiveSpeedFactor = 0
         totalInferenceTime = 0
         tokensPerSecond = 0
         currentLag = 0
@@ -133,8 +165,8 @@ public enum WhisperError : Error {
         hypothesisWords = []
         hypothesisText = ""
     }
-
-    func fetchModels() {
+    
+    public func fetchModels() {
         availableModels = [self.appSettings.selectedModel]
 
         // First check what's already downloaded
@@ -150,7 +182,7 @@ public enum WhisperError : Error {
                         localModels.append(model)
                     }
                 } catch {
-                    print("Error enumerating files at \(modelPath): \(error.localizedDescription)")
+                    self.messageBoard.postTemporaryMessage("Error enumerating files at \(modelPath): \(error.localizedDescription)")
                 }
             }
         }
@@ -164,8 +196,8 @@ public enum WhisperError : Error {
             }
         }
 
-        print("Found locally: \(localModels)")
-        print("Previously selected model: \(self.appSettings.selectedModel)")
+        //print("Found locally: \(localModels)")
+        //print("Previously selected model: \(self.appSettings.selectedModel)")
 
         Task {
             let remoteModels = try await WhisperKit.fetchAvailableModels(from: self.appSettings.repoName)
@@ -179,14 +211,22 @@ public enum WhisperError : Error {
         }
     }
 
-    func loadModel(_ model: String, redownload: Bool = false) {
+    public func loadModel(_ model: String, redownload: Bool = false) {
         print("Selected Model: \(UserDefaults.standard.string(forKey: "selectedModel") ?? "nil")")
+        print("""
+            Computing Options:
+            - Mel Spectrogram:  \(getComputeOptions().melCompute.description)
+            - Audio Encoder:    \(getComputeOptions().audioEncoderCompute.description)
+            - Text Decoder:     \(getComputeOptions().textDecoderCompute.description)
+            - Prefill Data:     \(getComputeOptions().prefillCompute.description)
+        """)
 
         whisperKit = nil
         Task {
             whisperKit = try await WhisperKit(
+                computeOptions: getComputeOptions(),
                 verbose: true,
-                logLevel: .none,
+                logLevel: .debug,
                 prewarm: false,
                 load: false,
                 download: false
@@ -235,7 +275,7 @@ public enum WhisperError : Error {
                     try await whisperKit.prewarmModels()
                     progressBarTask.cancel()
                 } catch {
-                    print("Error prewarming models, retrying: \(error.localizedDescription)")
+                    self.messageBoard.postTemporaryMessage("Error prewarming models, retrying: \(error.localizedDescription)")
                     progressBarTask.cancel()
                     if !redownload {
                         loadModel(model, redownload: true)
@@ -268,7 +308,7 @@ public enum WhisperError : Error {
         }
     }
 
-    func deleteModel() {
+    public func deleteModel() {
         if localModels.contains(self.appSettings.selectedModel) {
             let modelFolder = URL(fileURLWithPath: localModelPath).appendingPathComponent(self.appSettings.selectedModel)
 
@@ -281,12 +321,12 @@ public enum WhisperError : Error {
 
                 modelState = .unloaded
             } catch {
-                print("Error deleting model: \(error)")
+                self.messageBoard.postTemporaryMessage("Error deleting model: \(error)")
             }
         }
     }
 
-    func updateProgressBar(targetProgress: Float, maxTime: TimeInterval) async {
+    public func updateProgressBar(targetProgress: Float, maxTime: TimeInterval) async {
         let initialProgress = loadingProgressValue
         let decayConstant = -log(1 - targetProgress) / Float(maxTime)
 
@@ -303,11 +343,14 @@ public enum WhisperError : Error {
             await MainActor.run {
                 loadingProgressValue = currentProgress
             }
+            
+            self.messageBoard.postMessage("Model Progress | \((currentProgress * 1000).rounded() / 10)%")
 
             if currentProgress >= targetProgress {
                 break
             }
-
+            
+            
             do {
                 try await Task.sleep(nanoseconds: 100_000_000)
             } catch {
@@ -316,15 +359,56 @@ public enum WhisperError : Error {
         }
     }
 
-    func selectFile() {
+    public func selectFile() {
         isFilePickerPresented = true
     }
 
-    func toggleRecording(shouldLoop: Bool) {
-        self.isRecording.toggle()
-        
-        self.fftMagnitudes = ContiguousArray<Float>(repeating: 0.0001, count: 32)
-        
+    public func handleFilePicker(result: Result<[URL], Error>) {
+        switch result {
+            case let .success(urls):
+                guard let selectedFileURL = urls.first else { return }
+                if selectedFileURL.startAccessingSecurityScopedResource() {
+                    do {
+                        // Access the document data from the file URL
+                        let audioFileData = try Data(contentsOf: selectedFileURL)
+
+                        // Create a unique file name to avoid overwriting any existing files
+                        let uniqueFileName = UUID().uuidString + "." + selectedFileURL.pathExtension
+
+                        // Construct the temporary file URL in the app's temp directory
+                        let tempDirectoryURL = FileManager.default.temporaryDirectory
+                        let localFileURL = tempDirectoryURL.appendingPathComponent(uniqueFileName)
+
+                        // Write the data to the temp directory
+                        try audioFileData.write(to: localFileURL)
+
+                        self.messageBoard.postTemporaryMessage("File saved to temporary directory | \(localFileURL)")
+
+                        transcribeFile(path: selectedFileURL.path)
+                    } catch {
+                        self.messageBoard.postTemporaryMessage("File selection error | \(error.localizedDescription)")
+                    }
+                }
+            case let .failure(error):
+                print("File selection error | \(error.localizedDescription)")
+        }
+    }
+
+    public func transcribeFile(path: String) {
+        resetState()
+        whisperKit?.audioProcessor = AudioProcessor()
+        self.transcribeFileTask = Task {
+            do {
+                try await transcribeCurrentFile(path: path)
+            } catch {
+                self.messageBoard.postTemporaryMessage("File selection error | \(error.localizedDescription)")
+            }
+        }
+    }
+
+    public func toggleRecording(shouldLoop: Bool) {
+        isRecording.toggle()
+
         if isRecording {
             resetState()
             startRecording(shouldLoop)
@@ -333,11 +417,11 @@ public enum WhisperError : Error {
         }
     }
 
-    func startRecording(_ loop: Bool) {
+    public func startRecording(_ loop: Bool) {
         if let audioProcessor = whisperKit?.audioProcessor {
             Task(priority: .userInitiated) {
                 guard await AudioProcessor.requestRecordPermission() else {
-                    print("Microphone access was not granted.")
+                    self.messageBoard.postTemporaryMessage("Microphone access was not granted.")
                     return
                 }
 
@@ -352,7 +436,7 @@ public enum WhisperError : Error {
 
                 // There is no built-in microphone
                 if deviceId == nil {
-                    throw WhisperError.microphoneUnavailable
+                    throw WhisperError.microphoneUnavailable()
                 }
                 #endif
 
@@ -373,7 +457,7 @@ public enum WhisperError : Error {
         }
     }
 
-    func stopRecording(_ loop: Bool) {
+    public func stopRecording(_ loop: Bool) {
         isRecording = false
         stopRealtimeTranscription()
         if let audioProcessor = whisperKit?.audioProcessor {
@@ -386,7 +470,7 @@ public enum WhisperError : Error {
                 do {
                     try await transcribeCurrentBuffer()
                 } catch {
-                    print("Error: \(error.localizedDescription)")
+                    self.messageBoard.postTemporaryMessage("Error | \(error.localizedDescription)")
                 }
             }
         }
@@ -394,15 +478,38 @@ public enum WhisperError : Error {
 
     // MARK: - Transcribe Logic
 
-    func transcribeAudioSamples(_ samples: [Float]) async throws -> TranscriptionResult? {
+    public func transcribeCurrentFile(path: String) async throws {
+        let audioFileBuffer = try AudioProcessor.loadAudio(fromPath: path)
+        let audioFileSamples = AudioProcessor.convertBufferToArray(buffer: audioFileBuffer)
+        let transcription = try await transcribeAudioSamples(audioFileSamples)
+
+        await MainActor.run {
+            currentText = ""
+            guard let segments = transcription?.segments else {
+                return
+            }
+
+            self.tokensPerSecond = transcription?.timings.tokensPerSecond ?? 0
+            self.effectiveRealTimeFactor = transcription?.timings.realTimeFactor ?? 0
+            self.effectiveSpeedFactor = transcription?.timings.speedFactor ?? 0
+            self.currentEncodingLoops = Int(transcription?.timings.totalEncodingRuns ?? 0)
+            self.firstTokenTime = transcription?.timings.firstTokenTime ?? 0
+            self.pipelineStart = transcription?.timings.pipelineStart ?? 0
+            self.currentLag = transcription?.timings.decodingLoop ?? 0
+
+            self.confirmedSegments = segments
+        }
+    }
+
+    private func transcribeAudioSamples(_ samples: consuming [Float]) async throws -> TranscriptionResult? {
         guard let whisperKit = whisperKit else { return nil }
 
         let languageCode = Constants.languages[self.appSettings.selectedLanguage, default: Constants.defaultLanguageCode]
         let task: DecodingTask = self.appSettings.selectedTask == "transcribe" ? .transcribe : .translate
-        let seekClip = [lastConfirmedSegmentEndSeconds]
+        let seekClip: [Float] = []
 
         let options = DecodingOptions(
-            verbose: false,
+            verbose: true,
             task: task,
             language: languageCode,
             temperature: Float(self.appSettings.temperatureStart),
@@ -412,24 +519,46 @@ public enum WhisperError : Error {
             usePrefillCache: self.appSettings.enableCachePrefill,
             skipSpecialTokens: !self.appSettings.enableSpecialCharacters,
             withoutTimestamps: !self.appSettings.enableTimestamps,
-            clipTimestamps: seekClip
+            clipTimestamps: seekClip,
+            chunkingStrategy: self.appSettings.chunkingStrategy
         )
 
         // Early stopping checks
-        let decodingCallback: ((TranscriptionProgress) -> Bool?) = { progress in
+        let decodingCallback: ((TranscriptionProgress) -> Bool?) = { (progress: TranscriptionProgress) in
             DispatchQueue.main.async {
                 let fallbacks = Int(progress.timings.totalDecodingFallbacks)
-                if progress.text.count < self.currentText.count {
-                    if fallbacks == self.currentFallbacks {
-                        self.unconfirmedText.append(self.currentText)
+                let chunkId = progress.windowId
+
+                // First check if this is a new window for the same chunk, append if so
+                var updatedChunk = (chunkText: [progress.text], fallbacks: fallbacks)
+                if var currentChunk = self.currentChunks[chunkId], let previousChunkText = currentChunk.chunkText.last {
+                    if progress.text.count >= previousChunkText.count {
+                        // This is the same window of an existing chunk, so we just update the last value
+                        currentChunk.chunkText[currentChunk.chunkText.endIndex - 1] = progress.text
+                        updatedChunk = currentChunk
                     } else {
-                        print("Fallback occured: \(fallbacks)")
+                        // This is either a new window or a fallback (only in streaming mode)
+                        if fallbacks == currentChunk.fallbacks && self.isStreamMode {
+                            // New window (since fallbacks havent changed)
+                            updatedChunk.chunkText = currentChunk.chunkText + [progress.text]
+                        } else {
+                            // Fallback, overwrite the previous bad text
+                            updatedChunk.chunkText[currentChunk.chunkText.endIndex - 1] = progress.text
+                            updatedChunk.fallbacks = fallbacks
+                            self.messageBoard.postTemporaryMessage("Fallback occured: \(fallbacks)")
+                        }
                     }
                 }
-                self.currentText = progress.text
+
+                // Set the new text for the chunk
+                self.currentChunks[chunkId] = updatedChunk
+                let joinedChunks = self.currentChunks.sorted { $0.key < $1.key }.flatMap { $0.value.chunkText }.joined(separator: "\n")
+
+                self.currentText = joinedChunks
                 self.currentFallbacks = fallbacks
                 self.currentDecodingLoops += 1
             }
+
             // Check early stopping
             let currentTokens = progress.tokens
             let checkWindow = Int(self.appSettings.compressionCheckWindow)
@@ -437,72 +566,59 @@ public enum WhisperError : Error {
                 let checkTokens: [Int] = currentTokens.suffix(checkWindow)
                 let compressionRatio = compressionRatio(of: checkTokens)
                 if compressionRatio > options.compressionRatioThreshold! {
+                    Logging.debug("Early stopping due to compression threshold")
                     return false
                 }
             }
             if progress.avgLogprob! < options.logProbThreshold! {
+                Logging.debug("Early stopping due to logprob threshold")
                 return false
             }
             return nil
         }
 
-        return try await whisperKit.transcribe(
+        let transcriptionResults: [TranscriptionResult] = try await whisperKit.transcribe(
             audioArray: samples,
             decodeOptions: options,
             callback: decodingCallback
-        ).first
+        )
+
+        let mergedResults = mergeTranscriptionResults(transcriptionResults)
+
+        return mergedResults
     }
 
-    // MARK: - Streaming Logic
+    // MARK: Streaming Logic
 
-    func realtimeLoop() {
-        transcriptionTask = Task {
+    public func realtimeLoop() {
+        self.transcriptionTask = Task {
             while isRecording && isTranscribing {
                 do {
                     try await transcribeCurrentBuffer()
                 } catch {
-                    print("Error: \(error.localizedDescription)")
+                    self.messageBoard.postTemporaryMessage("Error | \(error.localizedDescription)")
                     break
                 }
             }
         }
-        visualizeTask = Task {
+        self.visualizeTask = Task {
             while isRecording && isTranscribing {
                 do {
                     try await visualizeCurrentBuffer()
                 } catch {
-                    print("Error: \(error.localizedDescription)")
+                    self.messageBoard.postTemporaryMessage("Error | \(error.localizedDescription)")
                     break
                 }
             }
         }
     }
 
-    func stopRealtimeTranscription() {
+    public func stopRealtimeTranscription() {
         isTranscribing = false
         transcriptionTask?.cancel()
     }
 
-    func visualizeCurrentBuffer() async throws {
-        guard let whisperKit = whisperKit else { return }
-        
-        let currentBuffer = whisperKit.audioProcessor.audioSamples.suffix(self.fftInResolution)
-        
-        var fftMagnitudes = Self.fft(data: currentBuffer,
-                                     inResolution: self.fftInResolution,
-                                     outResolution: self.fftOutResolution,
-                                     setup: self.fftSetup)
-        
-        fftMagnitudes[0] *= 0.2
-        fftMagnitudes[1] *= 0.4
-        
-        self.fftMagnitudes = fftMagnitudes
-        
-        try await Task.sleep(nanoseconds: 75_000_000)
-        
-    }
-    
-    func transcribeCurrentBuffer() async throws {
+    private func transcribeCurrentBuffer() async throws {
         guard let whisperKit = whisperKit else { return }
 
         // Retrieve the current audio buffer from the audio processor
@@ -524,24 +640,11 @@ public enum WhisperError : Error {
         }
 
         if self.appSettings.useVAD {
-            // Retrieve the current relative energy values from the audio processor
-            let currentRelativeEnergy = whisperKit.audioProcessor.relativeEnergy
-
-            // Calculate the number of energy values to consider based on the duration of the next buffer
-            // Each energy value corresponds to 1 buffer length (100ms of audio), hence we divide by 0.1
-            let energyValuesToConsider = Int(nextBufferSeconds / 0.1)
-
-            // Extract the relevant portion of energy values from the currentRelativeEnergy array
-            let nextBufferEnergies = currentRelativeEnergy.suffix(energyValuesToConsider)
-
-            // Determine the number of energy values to check for voice presence
-            // Considering up to the last 1 second of audio, which translates to 10 energy values
-            let numberOfValuesToCheck = max(10, nextBufferEnergies.count - 10)
-
-            // Check if any of the energy values in the considered range exceed the silence threshold
-            // This indicates the presence of voice in the buffer
-            let voiceDetected = nextBufferEnergies.prefix(numberOfValuesToCheck).contains { $0 > Float(self.appSettings.silenceThreshold) }
-
+            let voiceDetected = AudioProcessor.isVoiceDetected(
+                in: whisperKit.audioProcessor.relativeEnergy,
+                nextBufferInSeconds: nextBufferSeconds,
+                silenceThreshold: Float(self.appSettings.silenceThreshold)
+            )
             // Only run the transcribe if the next buffer has voice
             guard voiceDetected else {
                 await MainActor.run {
@@ -550,6 +653,7 @@ public enum WhisperError : Error {
                     }
                 }
 
+                // TODO: Implement silence buffer purging
 //                if nextBufferSeconds > 30 {
 //                    // This is a completely silent segment of 30s, so we can purge the audio and confirm anything pending
 //                    lastConfirmedSegmentEndSeconds = 0
@@ -569,7 +673,7 @@ public enum WhisperError : Error {
         // Store this for next iterations VAD
         lastBufferSize = currentBuffer.count
 
-        if self.appSettings.enableEagerDecoding {
+        if self.appSettings.enableEagerDecoding && isStreamMode {
             // Run realtime transcribe using word timestamps for segmentation
             let transcription = try await transcribeEagerMode(Array(currentBuffer))
             await MainActor.run {
@@ -582,6 +686,7 @@ public enum WhisperError : Error {
                 let totalAudio = Double(currentBuffer.count) / Double(WhisperKit.sampleRate)
                 self.totalInferenceTime = transcription?.timings.fullPipeline ?? 0
                 self.effectiveRealTimeFactor = Double(totalInferenceTime) / totalAudio
+                self.effectiveSpeedFactor = totalAudio / Double(totalInferenceTime)
             }
         } else {
             // Run realtime transcribe using timestamp tokens directly
@@ -590,7 +695,6 @@ public enum WhisperError : Error {
             // We need to run this next part on the main thread
             await MainActor.run {
                 currentText = ""
-                unconfirmedText = []
                 guard let segments = transcription?.segments else {
                     return
                 }
@@ -604,6 +708,7 @@ public enum WhisperError : Error {
                 let totalAudio = Double(currentBuffer.count) / Double(WhisperKit.sampleRate)
                 self.totalInferenceTime += transcription?.timings.fullPipeline ?? 0
                 self.effectiveRealTimeFactor = Double(totalInferenceTime) / totalAudio
+                self.effectiveSpeedFactor = totalAudio / Double(totalInferenceTime)
 
                 // Logic for moving segments to confirmedSegments
                 if segments.count > requiredSegmentsForConfirmation {
@@ -634,7 +739,7 @@ public enum WhisperError : Error {
         }
     }
 
-    func transcribeEagerMode(_ samples: [Float]) async throws -> TranscriptionResult? {
+    private func transcribeEagerMode(_ samples: consuming [Float]) async throws -> TranscriptionResult? {
         guard let whisperKit = whisperKit else { return nil }
 
         guard whisperKit.textDecoder.supportsWordTimestamps else {
@@ -644,9 +749,12 @@ public enum WhisperError : Error {
 
         let languageCode = Constants.languages[self.appSettings.selectedLanguage, default: Constants.defaultLanguageCode]
         let task: DecodingTask = self.appSettings.selectedTask == "transcribe" ? .transcribe : .translate
+        
+        //print(self.appSettings.selectedLanguage)
+        //print(languageCode)
 
         let options = DecodingOptions(
-            verbose: false,
+            verbose: true,
             task: task,
             language: languageCode,
             temperature: Float(self.appSettings.temperatureStart),
@@ -668,7 +776,7 @@ public enum WhisperError : Error {
                     if fallbacks == self.currentFallbacks {
                         //                        self.unconfirmedText.append(currentText)
                     } else {
-                        print("Fallback occured: \(fallbacks)")
+                        self.messageBoard.postTemporaryMessage("Fallback occured: \(fallbacks)")
                     }
                 }
                 self.currentText = progress.text
@@ -682,10 +790,12 @@ public enum WhisperError : Error {
                 let checkTokens: [Int] = currentTokens.suffix(checkWindow)
                 let compressionRatio = compressionRatio(of: checkTokens)
                 if compressionRatio > options.compressionRatioThreshold! {
+                    Logging.debug("Early stopping due to compression threshold")
                     return false
                 }
             }
             if progress.avgLogprob! < options.logProbThreshold! {
+                Logging.debug("Early stopping due to logprob threshold")
                 return false
             }
 
@@ -720,7 +830,7 @@ public enum WhisperError : Error {
 
                             confirmedWords.append(contentsOf: commonPrefix.prefix(commonPrefix.count - Int(self.appSettings.tokenConfirmationsNeeded)))
                             let currentWords = confirmedWords.map { $0.word }.joined()
-                            Logging.info("[EagerMode] Current:  \(lastAgreedSeconds) -> \(Double(samples.count) / 16000.0) \(currentWords)")
+                            
                         } else {
                             Logging.info("[EagerMode] Using same last agreed time \(lastAgreedSeconds)")
                             skipAppend = true
@@ -751,39 +861,66 @@ public enum WhisperError : Error {
         return mergedResult
     }
     
-    // MARK: - Auto-sending Logic
+    //MARK: - Visualization
     
-    func startCountdown() {
-        // Reset the countdown value to 10
-        self.countdownDelay = self.countdownDelayLimit
+    private func visualizeCurrentBuffer() async throws {
+        guard let whisperKit = whisperKit else { return }
         
-        // Create and schedule the timer to fire every 1 second
+        let currentBuffer = whisperKit.audioProcessor.audioSamples.suffix(Self.fftInResolution)
+        //fft
         
-        self.timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { _ in
-            if self.countdownDelay != 0 {
-                self.countdownDelay -= 1
-                
-                if self.countdownDelay == 0 {
-                    self.countdownValue = self.countdownValueLimit
-                }
-            } else {
-                self.countdownValue -= 1
-            }
-            // When the countdown reaches zero, stop the timer
-            if self.countdownValue <= 0 && self.countdownDelay <= 0{
-                self.timer?.invalidate()
-                self.timer = nil
-            }
+        let fftMagnitudesTemp = Self.fft(samples: currentBuffer)
+        
+        if let first = fftMagnitudesTemp.first, !first.isNaN {
+            self.fftMagnitudes = consume fftMagnitudesTemp
         }
+
+        try await Task.sleep(nanoseconds: 50_000_000)
+        
     }
     
-    func resetCountdown() {
-        // Invalidate and remove the timer
-        self.timer?.invalidate()
-        self.timer = nil
-        // Reset the countdown value
-        self.countdownValue = 0
-        self.countdownDelay = 0
+    @inlinable static func fft(samples : consuming ArraySlice<Float>) -> ContiguousArray<Float> {
+        var realOut = ContiguousArray<Float>(repeating: 0.0, count: Self.fftInResolution)
+        var imagOut = ContiguousArray<Float>(repeating: 0.0, count: Self.fftInResolution)
+        
+        var magnitudes = ContiguousArray<Float>.init(repeating: 0.0, count: Self.fftOutResolution)
+
+        
+        samples.withContiguousStorageIfAvailable { realInBufferPointer in
+            Self.zerosBuffer.withContiguousStorageIfAvailable { imagInBufferPointer in
+                realOut.withContiguousMutableStorageIfAvailable { realOutBufferPointer in
+                    imagOut.withContiguousMutableStorageIfAvailable { imagOutBufferPointer in
+                            vDSP_DFT_Execute(Self.fftSetup,
+                                             realInBufferPointer.baseAddress!,
+                                             imagInBufferPointer.baseAddress!,
+                                             realOutBufferPointer.baseAddress!,
+                                             imagOutBufferPointer.baseAddress!)
+                            magnitudes.withContiguousMutableStorageIfAvailable { magnitudesBufferPointer in
+                                var complex = DSPSplitComplex(realp: realOutBufferPointer.baseAddress!, imagp: imagOutBufferPointer.baseAddress!)
+                                vDSP_zvabs(&complex, 1, magnitudesBufferPointer.baseAddress!, 1, UInt(Self.fftOutResolution))
+                        }
+                    }
+                }
+            }
+        }
+        
+        //scale down the big boi samples around 1 hertz
+        magnitudes[0] *= 0.2
+        magnitudes[1] *= 0.4
+        
+        return magnitudes
+    }
+    
+    // MARK: - Auto-sending Logic
+    
+    private func checkAudioBuffer() {
+        if self.lastBufferEnergy > Float(self.appSettings.silenceThreshold) {
+            self.numBuffersMeetThreshold += 1
+        } else {
+            self.numBuffersMeetThreshold = 0
+        }
+        
+        
     }
 }
 
