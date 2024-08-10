@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>UIAppFonts</key>
+	<array>
+		<string>zig.ttf</string>
+		<string>Futura.ttf</string>
+		<string>FuturaSkew.ttf</string>
+		<string>FuturaHeavy.ttf</string>
+		<string>FuturaHeavySkew.ttf</string>
+		<string>FuturaLight.ttf</string>
+		<string>FuturaLightSkew.ttf</string>
+		<string>DigitalDream.ttf</string>
+		<string>DigitalDreamBold.ttf</string>
+		<string>DigitalDreamBoldSkew.ttf</string>
+		<string>DigitalDreamSkew.ttf</string>
+	</array>
+</dict>
+</plist>

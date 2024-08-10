@@ -1,0 +1,14 @@
+[
+    {
+        "name": "TinyLlama-1.1B (Q4_0, 0.6 GiB)",
+        "repo" : "TheBloke/TinyLlama-1.1B-1T-OpenOrca-GGUF",
+        "url": "https://huggingface.co/TheBloke/TinyLlama-1.1B-1T-OpenOrca-GGUF/resolve/main/tinyllama-1.1b-1t-openorca.Q4_0.gguf?download=true",
+        "filename": "tinyllama-1.1b-1t-openorca.Q4_0.gguf",
+    },
+    {
+        "name": "TinyLlama-1.1B (Q4_0, 0.6 GiB)",
+        "repo" : "TheBloke/TinyLlama-1.1B-1T-OpenOrca-GGUF",
+        "url": "https://huggingface.co/TheBloke/TinyLlama-1.1B-1T-OpenOrca-GGUF/resolve/main/tinyllama-1.1b-1t-openorca.Q4_0.gguf?download=true",
+        "filename": "tinyllama-1.1b-1t-openorca.Q4_0.gguf",
+    },
+]
