@@ -7,8 +7,8 @@ public enum ChatManagerError : Error {
 }
 
 public enum ChatSender : String, Codable {
-    case sal
-    case user
+    case sal = "bot"
+    case user = "user"
 }
 
 public struct ChatMessage : Codable, CustomStringConvertible {
@@ -45,11 +45,6 @@ extension ChatMessage : Hashable {
     }
 }
 
-
-extension Array where Element == ChatMessage {
-    //public func 
-}
-
 @Model public final class Chat {
     
     public var messages : [ChatMessage] = []
@@ -73,7 +68,7 @@ extension Array where Element == ChatMessage {
 
 @Observable public final class ChatManager {
     
-    public private(set)var modelContainer : ModelContainer? = nil
+    public private(set) var modelContainer : ModelContainer? = nil
     public private(set) var activeChat : Chat? = nil
     
     public private(set) var chatHistory : [Chat] = []
@@ -83,34 +78,36 @@ extension Array where Element == ChatMessage {
     
     
     init(messageBoard : MessageBoardManager) {
-        
         self.messageBoard = messageBoard
-
     }
     
     @MainActor public func loadModelContainer(useDummyChats : Bool = true) throws {
         let modelConfiguration = ModelConfiguration(for: Chat.self, isStoredInMemoryOnly: true)
 
-        
-        
         self.modelContainer = try ModelContainer(for: Chat.self, configurations: modelConfiguration)
         
-
+        guard useDummyChats else {
+            return
+        }
+        
+        
         for idx in (0...10) {
-            let exampleChat = Chat.init(withPrePrompt: "as;dlkfja;sldfkj")
+
+            let exampleChat = Chat.init(withPrePrompt: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.")
             
-            exampleChat.title = "\(idx) - Best movies of the decade"
+            exampleChat.title = "\(idx) - Lorem Ipsum"
             
-            exampleChat.summary = "this is fucking ridiicasdlj kfa;sd lk fja sldkfja;s dlkfj as;dlkf"
+            exampleChat.summary = "Lorem ipsum dolor sit amet, consectetur adipiscing elit."
             
             let exampleMessages : [ChatMessage] = [
-                .init(sender: .sal, text: "ASDF", tokensPerSecondForGeneration: 0.9),
-                .init(sender: .user, text: "ASDF", tokensPerSecondForGeneration: 0.9),
-                .init(sender: .sal, text: "ASDF", tokensPerSecondForGeneration: 0.9),
-                .init(sender: .user, text: "ASDF", tokensPerSecondForGeneration: 0.9),
-                .init(sender: .sal, text: "ASDF", tokensPerSecondForGeneration: 0.9),
-                .init(sender: .user, text: "ASDF", tokensPerSecondForGeneration: 0.9),
-                .init(sender: .sal, text: "ASDF", tokensPerSecondForGeneration: 0.9),
+                .init(sender: .user, text: "Suspendisse quis quam nibh.", tokensPerSecondForGeneration: 0.9),
+                .init(sender: .sal, text: "Fusce condimentum faucibus nisl tristique congue.", tokensPerSecondForGeneration: 0.9),
+                .init(sender: .user, text: "Vestibulum purus sem, mattis sed iaculis sed, fermentum non urna.", tokensPerSecondForGeneration: 0.9),
+                .init(sender: .sal, text: "Maecenas commodo gravida ultrices.", tokensPerSecondForGeneration: 0.9),
+                .init(sender: .user, text: "Proin id felis dignissim, euismod eros sit amet, maximus velit.", tokensPerSecondForGeneration: 0.9),
+                .init(sender: .sal, text: "Duis quis vulputate urna, eget euismod metus.", tokensPerSecondForGeneration: 0.9),
+                .init(sender: .user, text: "Sed mollis porttitor viverra.", tokensPerSecondForGeneration: 0.9),
+                .init(sender: .sal, text: "Morbi a magna sem.", tokensPerSecondForGeneration: 0.9),
                 
             ]
             

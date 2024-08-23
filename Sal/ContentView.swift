@@ -126,9 +126,17 @@ struct ContentView: View {
                         .blur(radius: 0.55)
                 }
             case .historicChatMessages:
-                ChatMessagesView(tvViewState: self.$tvViewState, chat: self.chatViewModel.chat.chatHistory[self.tvViewState.selectedChatHistoryIndex])
-                    .padding(.horizontal, 25)
-                    .blur(radius: 0.45)
+                if !self.chatViewModel.chat.chatHistory.isEmpty {
+                    ChatMessagesView(tvViewState: self.$tvViewState,
+                                     chat: self.chatViewModel.chat.chatHistory[self.tvViewState.selectedChatHistoryIndex])
+                        .padding(.horizontal, 25)
+                        .blur(radius: 0.45)
+                } else {
+                    Text("there is no chat history")
+                        .font(.custom("zig", size: 12))
+                        .foregroundStyle(.white)
+                        .blur(radius: 0.55)
+                }
             }
         }
         //.fixedSize(horizontal: false, vertical: true)
@@ -324,6 +332,7 @@ struct ContentView: View {
                 self.tvViewState.displayType = .salSignature
             }
         }
+        
     }
 }
 

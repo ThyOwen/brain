@@ -2,7 +2,7 @@
 //  ChatMessagesView.swift
 //  Sal
 //
-//  Created by Owen O'Malley on 7/14/24.
+//  Created b y Owen O'Malley on 7/14/24.
 //
 
 import SwiftUI
@@ -10,22 +10,42 @@ import SwiftData
 
 
 struct ChatMessagesView: View {
-    
+
     @Binding public var tvViewState : TVViewState
     @Bindable public var chat : Chat
     
-    public var numMessagesDisplayed : Int = 4
+    //@Query(FetchDescriptor<Chat>.init(predicate: #Predicate<Chat> { $0.persistentModelID != self.chatViewModel.activeChatID }, sortBy: [.init(\.date)]))
+    
+    public let numMessagesDisplayed : Int = 4
     
     private var chatIndicesRange : Range<Int> {
-        let lowerBound = self.tvViewState.selectedChatMessageIndex
-        let upperBound = lowerBound + self.numMessagesDisplayed
         
-        if upperBound > self.chat.messages.count {
-            return (lowerBound..<self.chat.messages.count)
-        } else {
-            return (lowerBound..<upperBound)
+        let lowerBound : Int
+        let upperBound : Int
+        
+        switch tvViewState.displayType {
+        case .waveAndActiveChatMessages:
+            upperBound = self.chat.messages.count
+            lowerBound = upperBound - self.numMessagesDisplayed
+            
+            if lowerBound < 0 {
+                return 0..<upperBound
+            } else {
+                return lowerBound..<upperBound
+            }
+        default:
+            lowerBound = self.tvViewState.selectedChatMessageIndex
+            upperBound = lowerBound + self.numMessagesDisplayed
+            
+            if upperBound > self.chat.messages.count {
+                return lowerBound..<self.chat.messages.count
+            } else {
+                return lowerBound..<upperBound
+            }
         }
+         
     }
+    
     
     var body: some View {
         VStack(alignment: .center, spacing: 10) {
@@ -51,7 +71,8 @@ struct ChatMessagesView: View {
                                          removal: .move(edge: .top)).combined(with: .opacity).animation(.easeInOut(duration: 0.2)))
 
             }
-        }.transition(.opacity)
+        }
+        .transition(.opacity)
     }
 }
 
@@ -86,7 +107,7 @@ fileprivate struct TestView : View {
         }
         .onAppear {
             try? self.chatViewModel.chat.loadModelContainer()
-            try? self.chatViewModel.chat.loadChatHistory()
+            self.chatViewModel.chat.loadChatHistory()
             self.chatViewModel.chat.createChat(withPrePrompt: "Asdfasdfasdf")
             
             

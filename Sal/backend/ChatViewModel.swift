@@ -8,11 +8,15 @@
 import Foundation
 import SwiftData
 
+import class AVFoundation.AVAudioPlayer
+
 public enum ChatViewModelState {
     case unloaded, loading, ready, thinking
 }
 
 @Observable public final class ChatViewModel {
+    
+    private var startupAudioPlayer : AVAudioPlayer? = nil //just for startup sound
     
     public private(set) var state : ChatViewModelState = .unloaded
     
@@ -70,12 +74,13 @@ public enum ChatViewModelState {
         self.state = .loading
         
         do {
+            try await self.chat.loadModelContainer()
+            await self.chat.loadChatHistory()
             try await self.espeak.loadModel()
             try await self.whisper.loadModel()
             try await self.llama.loadModel()
-            try await self.chat.loadModelContainer()
         } catch {
-            self.messageBoard.postTemporaryMessage(error.localizedDescription, duration: 7)
+            self.messageBoard.postTemporaryMessage(error.localizedDescription, duration: 10)
         }
         
 #if os(macOS)
@@ -86,6 +91,7 @@ public enum ChatViewModelState {
         self.wave.espeak = self.espeak
         
         self.wave.startWaveTask()
+        
 
         if !self.areModelsLoaded {
             self.state = .unloaded
@@ -93,6 +99,7 @@ public enum ChatViewModelState {
         } else {
             self.state = .ready
             self.messageBoard.postMessage("ready to converse")
+            self.playStartup()
         }
         
     }
@@ -122,11 +129,11 @@ public enum ChatViewModelState {
                 let unconfirmedText = self.whisper.unconfirmedSegments.map { $0.text }.joined(separator: "")
                 let confirmedText = self.whisper.confirmedSegments.map { $0.text }.joined(separator: "")
                 
-                let userText = "<s>\(consume unconfirmedText + consume confirmedText)</s>"
+                let userText = "\(consume unconfirmedText + consume confirmedText)"
                 
                 let userMessage : ChatMessage = .init(sender: .user, text: userText, tokensPerSecondForGeneration: self.whisper.tokensPerSecond)
                 
-                var salResponse : ChatMessage = .init(sender: .sal, text: "<s>", tokensPerSecondForGeneration: 0)
+                var salResponse : ChatMessage = .init(sender: .sal, text: "", tokensPerSecondForGeneration: 0)
                 
                 activeChat.messages.append(userMessage)
                 
@@ -140,23 +147,22 @@ public enum ChatViewModelState {
                     while await !llamaContext.isDone {
                         let (resultString, _)  = try await llamaContext.completionLoop()
                         
-                        salResponse.text += resultString
+                        
                         
                         tokenCounter += 1
+                        
                         responseText += resultString
                         
-                        if salResponse.text.suffix(4) == "</s>" {
-                            let speechText = responseText.replacingOccurrences(of: "</s>", with: "")
-
+                        if !responseText.contains("\n") {
+                            salResponse.text += resultString
+                        } else {
+                            let speechText = responseText//.replacingOccurrences(of: "user:", with: "")
                             self.espeak.generateSpeech(with: speechText)
                             break
                         }
                         
                         if tokenCounter % self.numTokensBeforeSalSpeaks == 0 {
-                            
-                            //responseText.contains("/s")
-                            let speechText = responseText.replacingOccurrences(of: "</s", with: "")
-                            self.espeak.generateSpeech(with: speechText)
+                            self.espeak.generateSpeech(with: responseText)
                             
                             responseText = ""
                         }
@@ -178,8 +184,14 @@ public enum ChatViewModelState {
         }
     }
     
-    public func startRunLoop() {
+    public func playStartup() {
+        guard let soundURL = Bundle.main.url(forResource: "startup2", withExtension: "aif") else {
+            return
+        }
 
+        self.startupAudioPlayer = try? AVAudioPlayer(contentsOf: soundURL)
+
+        self.startupAudioPlayer?.play()
     }
        
 }

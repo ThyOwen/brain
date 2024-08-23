@@ -21,8 +21,6 @@ public enum ESpeakError : Error {
 
 @Observable public final class ESpeak {
     
-    private var startupAudioPlayer : AVAudioPlayer? = nil //just for startup sound
-    
     public var modelState : ModelState = .unloaded
     
     public let synthesizer : AVSpeechSynthesizer = .init()
@@ -43,7 +41,9 @@ public enum ESpeakError : Error {
     private var timerTask : Task<Void,Never>? = nil
     
     private var timeUntilFinished : Double = 0
-    public var isSalSpeaking : Bool { self.timeUntilFinished != 0 }
+    public var isSalSpeaking : Bool {
+        self.timeUntilFinished != 0
+    }
     
     private var messageBoard : MessageBoardManager
     private var wave : WaveManager
@@ -72,14 +72,19 @@ public enum ESpeakError : Error {
         await MainActor.run {
             self.modelState = .loading
         }
-        
-        let voice = AVSpeechSynthesisVoice.speechVoices().first { voiceInArray in
-            return voiceInArray.identifier == "duck.Sal.ESpeakExtension.auto.en-us.UniRobot"
-            //return voiceInArray.identifier == "com.apple.ttsbundle.siri_Helena_de-DE_compact"
-            //return voiceInArray.identifier.components(separatedBy: ".").last == "UniRobot"
 
+        let voices = AVSpeechSynthesisVoice.speechVoices()
+        
+        let isEspeakWorking = voices.contains { voiceInArray in
+            voiceInArray.identifier == "duck.Sal.ESpeakExtension.auto.en-us.UniRobot"
         }
         
+        let voiceID = isEspeakWorking ? "duck.Sal.ESpeakExtension.auto.en-us.UniRobot" : "com.apple.ttsbundle.siri_Helena_de-DE_compact"
+        
+        let voice = voices.first { voiceInArray in
+            return voiceInArray.identifier == voiceID
+        }
+
         guard let voice else {
             throw ESpeakError.couldNotLoadVoice
         }
@@ -165,8 +170,6 @@ public enum ESpeakError : Error {
             }
 
             
-        } toMarkerCallback: { syntheisMarkerArray in
-            print(syntheisMarkerArray.count)
         }
         
         self.audioPlayer.play()
@@ -191,16 +194,7 @@ public enum ESpeakError : Error {
     }
     
     //MARK: - startup sound
-    
-    public func playStartup() {
-        guard let soundURL = Bundle.main.url(forResource: "startup2", withExtension: "aif") else {
-            return
-        }
 
-        self.startupAudioPlayer = try? AVAudioPlayer(contentsOf: soundURL)
-
-        self.startupAudioPlayer?.play()
-    }
 }
 
 

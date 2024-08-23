@@ -73,7 +73,18 @@ struct ControlsView: View {
             Task {
                 await self.chatViewModel.loadModels()
                 
-                let prePrompt = "a diologue between a human and a robot. The robot is kind and always answers questions truthfully. When the robot is finished it indicates that is done speaking with the '</s>' symbol,  and never speaks twice in a row.\n"
+                let prePrompt = """
+                A diologue between a human and a robot. The robot is kind and always answers questions truthfully. The robot never speaks twice in a row adnnnthe conversation is strictly between the robot and the human.
+                
+                An example diologue might look like: "
+                \(ChatSender.user.rawValue): Hello.
+                \(ChatSender.sal.rawValue): How may I help you?
+                \(ChatSender.user.rawValue): Tell me a joke.
+                \(ChatSender.sal.rawValue): What should you wear to a tea party? A T-shirt.
+                "
+                The user asks questions and the robots never breaks the format.
+                
+                """
                 
                 await self.chatViewModel.chat.createChat(withPrePrompt: prePrompt)
                 
