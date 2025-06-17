@@ -103,15 +103,5 @@ SalUITests/
 - `Llama`: Handles LLM inference.
 - `MessageBoardManager`: Manages status and temporary messages.
 
-## Customization
-
-- **Models:** Place additional Whisper or Llama models in the appropriate directories as prompted by the app.
-- **UI:** Modify SwiftUI views in `top_card/`, `bottom_card/`, and `neumorphic/` for custom appearance.
-
 ## License
-
 This project includes code under the GPL (eSpeak-NG) and other open-source licenses. See individual package licenses for details.
-
----
-
-For more information, see the documentation in each module or contact the project maintainer.
