@@ -79,8 +79,8 @@ SalUITests/
 
 
 <p align="center">
-    <img src="assets/test_images/lighter.PNG" alt="Sal Light Mode" width="35%" style="display:inline-block; margin-right:10px; border-radius:12px; box-shadow:0 2px 8px #ccc;" />
-    <img src="assets/test_images/darker.PNG" alt="Sal Dark Mode" width="35%" style="display:inline-block; border-radius:12px; box-shadow:0 2px 8px #222;" />
+    <img src="assets/test_images/lighter.jpg" alt="Sal Light Mode" width="35%" style="display:inline-block; margin-right:10px; border-radius:12px; box-shadow:0 2px 8px #ccc;" />
+    <img src="assets/test_images/darker.jpg" alt="Sal Dark Mode" width="35%" style="display:inline-block; border-radius:12px; box-shadow:0 2px 8px #222;" />
 </p>
 <p align="center">
     <em>Sal in Light and Dark Modes</em>
