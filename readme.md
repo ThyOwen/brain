@@ -1,6 +1,15 @@
-Collecting workspace information# Sal
+
+# Sal
 
 Sal is a cross-platform conversational AI application featuring real-time speech recognition, text-to-speech synthesis, and large language model (LLM) chat capabilities. It leverages [WhisperKit](https://github.com/argmaxinc/whisperkit-coreml) for speech-to-text, eSpeak-NG for text-to-speech, and Llama.cpp for LLM inference. The app is built with SwiftUI and supports both macOS and iOS.
+
+<p align="center">
+    <img src="assets/test_images/lighter.PNG" alt="Sal Light Mode" width="35%" style="display:inline-block; margin-right:10px; border-radius:12px; box-shadow:0 2px 8px #ccc;" />
+    <img src="assets/test_images/darker.PNG" alt="Sal Dark Mode" width="35%" style="display:inline-block; border-radius:12px; box-shadow:0 2px 8px #222;" />
+</p>
+<p align="center">
+    <em>Sal in Light and Dark Modes</em>
+</p>
 
 ## Features
 
